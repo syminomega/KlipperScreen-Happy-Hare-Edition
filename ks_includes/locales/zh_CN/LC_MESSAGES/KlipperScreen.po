@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlipperScreen\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-26 12:31-0300\n"
+"POT-Creation-Date: 2026-06-16 23:04+0800\n"
 "PO-Revision-Date: 2024-11-27 21:00+0000\n"
 "Last-Translator: Sun Zheng <123456789sunzheng@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -18,6 +18,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.9-dev\n"
+
+#, python-brace-format
+msgid ""
+"\n"
+"\n"
+"Specified gate may not be the correct gate for T{tool}.\n"
+"Proceeding will update the TTG map and mark the gate available"
+msgstr ""
+"\n"
+"\n"
+"指定的通道可能不是 T{tool} 的正确通道。\n"
+"继续将更新 TTG 映射并将该通道标记为可用"
+
+#, python-brace-format
+msgid ""
+"\n"
+"EndlessSpool group includes gates: {gates}"
+msgstr ""
+"\n"
+"EndlessSpool 组包含通道：{gates}"
 
 #, python-format
 msgid "%s will be updated to version"
@@ -67,6 +87,9 @@ msgstr "已存档"
 msgid "Are you sure do you want to exclude the object?"
 msgstr "您确定要排除该对象吗？"
 
+msgid "Are you sure you want to reset MMU statistics?"
+msgstr "确定要重置 MMU 统计信息吗？"
+
 msgid "Are you sure you want to run Emergency Stop?"
 msgstr "您确定要紧急停止吗？"
 
@@ -82,11 +105,17 @@ msgstr "您确定要重启系统吗？"
 msgid "Are you sure you wish to shutdown the system?"
 msgstr "您确定要关闭系统吗？"
 
+msgid "Are you sure?"
+msgstr "确定吗？"
+
 msgid "Asks for confirmation before stopping"
 msgstr "停止前要求确认"
 
 msgid "Auto"
 msgstr "自动"
+
+msgid "Auto Recover"
+msgstr "自动恢复"
 
 msgid "Auto-calibrate"
 msgstr "自动校准"
@@ -100,6 +129,12 @@ msgstr "暂停打印时自动打开挤出控制面板"
 msgid "Auto-scroll"
 msgstr "自动滚屏"
 
+msgid "Avail: "
+msgstr "可用: "
+
+msgid "Available"
+msgstr "可用"
+
 msgid "Bed Level"
 msgstr "热床调平"
 
@@ -109,8 +144,31 @@ msgstr "床网"
 msgid "Both"
 msgstr "两个都"
 
+msgid "Buffered"
+msgstr "缓冲"
+
+msgid "Bypass"
+msgstr "旁路"
+
+#, python-brace-format
+msgid "Bypass (on bypass gate) with filament {filament}"
+msgstr "旁路（旁路通道），耗材：{filament}"
+
+msgid "Cal. Encoder"
+msgstr "校准编码器"
+
+msgid "Cal. Gate..."
+msgstr "校准通道..."
+
 msgid "Calibrate"
 msgstr "校准"
+
+#, python-brace-format
+msgid "Calibrate #{i}"
+msgstr "校准通道 #{i}"
+
+msgid "Calibrate ALL"
+msgstr "全部校准"
 
 msgid "Calibrated"
 msgstr "已校准"
@@ -151,11 +209,42 @@ msgstr "群组"
 msgid "Check ADXL Wiring"
 msgstr "请检查加速度计的接线"
 
+msgid "Check Gate"
+msgstr "检查通道"
+
+#, python-brace-format
+msgid "Check Gate #{i}"
+msgstr "检查通道 #{i}"
+
+msgid "Check Gate..."
+msgstr "检查通道..."
+
+msgid ""
+"Check filament availability in all MMU gates?\n"
+"\n"
+"Are you sure you want to continue?"
+msgstr ""
+"检查所有 MMU 通道中的耗材可用性？\n"
+"\n"
+"确定要继续吗？"
+
 msgid "Checking for updates, please wait..."
 msgstr "正在检查更新，请稍等..."
 
 msgid "Clear"
 msgstr "清除"
+
+msgid "Clog"
+msgstr "堵料"
+
+msgid "Clog (Auto)"
+msgstr "堵料（自动）"
+
+msgid "Clog (Man)"
+msgstr "堵料（手动）"
+
+msgid "Clog Off"
+msgstr "堵料检测关闭"
 
 msgid "Close"
 msgstr "关闭"
@@ -163,11 +252,17 @@ msgstr "关闭"
 msgid "Close messages after a timeout"
 msgstr "超时后自动关闭通知"
 
+msgid "Comment"
+msgstr "备注"
+
 msgid "Complete"
 msgstr "完成"
 
 msgid "Confirm Emergency Stop"
 msgstr "紧急停止需要二次确认"
+
+msgid "Confirm TTG/EndlessSpool Reset"
+msgstr "确认重置 TTG/EndlessSpool"
 
 msgid "Connected"
 msgstr "已连接"
@@ -194,11 +289,14 @@ msgstr "无法添加网络"
 msgid "Current"
 msgstr "当前"
 
+msgid "Current MMU state:"
+msgstr "当前 MMU 状态："
+
 msgid "Current percentage and graph line"
 msgstr "当前百分比和走线"
 
-msgid "DPMS has failed to load and has been disabled"
-msgstr "屏幕省电管理系统无法加载并已禁用"
+msgid "DPMS has failed and has been disabled"
+msgstr "屏幕省电管理系统失败并已禁用"
 
 msgid "Date"
 msgstr "日期"
@@ -212,14 +310,26 @@ msgstr "删除文件夹？"
 msgid "Delete File?"
 msgstr "删除文件？"
 
+msgid "Disable E.Spool"
+msgstr "禁用 E.Spool"
+
+msgid "Disable LED"
+msgstr "禁用 LED"
+
 msgid "Disable Motors"
 msgstr "关闭电机"
 
 msgid "Disable for 12hs with am / pm"
 msgstr "禁用以使用12小时制 (AM/PM)"
 
+msgid "Disabled"
+msgstr "已禁用"
+
 msgid "Disconnect"
 msgstr "断开"
+
+msgid "Display Status"
+msgstr "显示状态"
 
 msgid "Distance (mm)"
 msgstr "挤出长度（mm）"
@@ -232,14 +342,43 @@ msgstr "您要忘记或断开%s的连接吗？"
 msgid "Do you want to recover %s?"
 msgstr "你想恢复 %s 吗？"
 
+msgid "ES Group: A"
+msgstr "ES 组：A"
+
+#, python-brace-format
+msgid "ES Group: {group}"
+msgstr "ES 组：{group}"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Eject"
+msgstr "弹出"
+
+#, python-brace-format
+msgid "Eject Gate #{i}"
+msgstr "弹出通道 #{i}"
+
+msgid "Eject Gate..."
+msgstr "弹出通道..."
+
 msgid "Elapsed:"
 msgstr "已用时间："
 
 msgid "Emergency Stop"
 msgstr "紧急停止"
 
+msgid "Empty"
+msgstr "空"
+
+msgid "Enable E.Spool"
+msgstr "启用 E.Spool"
+
 msgid "Enable screen power management"
 msgstr "启用屏幕电源管理"
+
+msgid "EndlessSpool - Editing"
+msgstr "EndlessSpool - 编辑"
 
 msgid "Error"
 msgstr "错误"
@@ -277,6 +416,9 @@ msgstr "特大"
 msgid "Extrude"
 msgstr "挤出"
 
+msgid "Extrude..."
+msgstr "挤出..."
+
 msgid "Extruders"
 msgstr "挤出机"
 
@@ -312,6 +454,26 @@ msgstr "使用耗材："
 
 msgid "Filament:"
 msgstr "耗材："
+
+msgid "Filament: Loaded"
+msgstr "耗材：已载入"
+
+msgid "Filament: Unknown"
+msgstr "耗材：未知"
+
+msgid "Filament: Unloaded"
+msgstr "耗材：已卸载"
+
+#, python-brace-format
+msgid "Filament: {filament}"
+msgstr "耗材：{filament}"
+
+#, python-brace-format
+msgid "Filament: {position}mm"
+msgstr "耗材：{position}mm"
+
+msgid "Filaments..."
+msgstr "耗材..."
 
 msgid "File"
 msgstr "文件"
@@ -349,8 +511,31 @@ msgstr "用于鼠标控制或验证触摸屏的准确性"
 msgid "Forget"
 msgstr "忘记"
 
+msgid "Form Tip"
+msgstr "成型料尖"
+
 msgid "Full Update"
 msgstr "更新全部"
+
+msgid "Gate"
+msgstr "通道"
+
+msgid "Gate #0"
+msgstr "通道 #0"
+
+#, python-brace-format
+msgid "Gate #{gate}"
+msgstr "通道 #{gate}"
+
+#, python-brace-format
+msgid "Gate: {gate}"
+msgstr "通道：{gate}"
+
+msgid "Gates"
+msgstr "通道"
+
+msgid "Gates: "
+msgstr "通道: "
 
 msgid "Gcodes"
 msgstr "g代码"
@@ -360,6 +545,9 @@ msgstr "获取IP地址中"
 
 msgid "Go Back"
 msgstr "返回"
+
+msgid "Grip"
+msgstr "夹持"
 
 msgid "Height:"
 msgstr "高度："
@@ -397,8 +585,14 @@ msgstr "主机名"
 msgid "ID"
 msgstr "ID"
 
+msgid "IP Address"
+msgstr "IP 地址"
+
 msgid "Icon Theme"
 msgstr "外观"
+
+msgid "Idle"
+msgstr "空闲"
 
 msgid "Initializing printer..."
 msgstr "正在初始化打印机..."
@@ -463,6 +657,12 @@ msgstr "Klipper正在启动"
 msgid "Klipper will reboot"
 msgstr "Klipper将重新启动"
 
+msgid "LED Fil. Color"
+msgstr "LED 耗材颜色"
+
+msgid "LED Gate Status"
+msgstr "LED 通道状态"
+
 msgid ""
 "LOAD_FILAMENT/UNLOAD_FILAMENT are hidden and should be used from extrude"
 msgstr "加载耗材/卸载耗材 已被隐藏，请前往在挤出控制界面"
@@ -476,7 +676,17 @@ msgstr "大"
 msgid "Last Duration"
 msgstr "上次用时"
 
+msgid "Last Error"
+msgstr "上次错误"
+
+#, python-brace-format
+msgid "Last Toolchange: {last_toolchange}"
+msgstr "上次换料：{last_toolchange}"
+
 msgid "Last Used"
+msgstr "上次使用"
+
+msgid "Last used"
 msgstr "上次使用"
 
 msgid "Layer Height"
@@ -497,6 +707,25 @@ msgstr "打印机限制"
 msgid "Load"
 msgstr "载入耗材"
 
+#, python-brace-format
+msgid "Load #{gate}"
+msgstr "载入通道 #{gate}"
+
+msgid "Load Ext"
+msgstr "载入挤出机"
+
+msgid "Load T0"
+msgstr "载入 T0"
+
+msgid "Load Tool..."
+msgstr "载入工具..."
+
+msgid "Loaded"
+msgstr "已载入"
+
+msgid "Loading"
+msgstr "正在载入"
+
 msgid "Loading..."
 msgstr "加载中..."
 
@@ -509,6 +738,36 @@ msgstr "与 Moonraker 失去连接"
 msgid "Lower Nozzle"
 msgstr "降低喷嘴"
 
+msgid "MMU"
+msgstr "MMU"
+
+msgid "MMU Pause"
+msgstr "MMU 暂停"
+
+msgid "MMU Setup"
+msgstr "MMU 设置"
+
+msgid "MMU State Recovery"
+msgstr "MMU 状态恢复"
+
+msgid "MMU Tool Picker"
+msgstr "MMU 工具选择"
+
+msgid "MMU shortcut on sidebar"
+msgstr "在侧边栏显示 MMU 快捷按钮"
+
+msgid "MMU show bold filament"
+msgstr "MMU 加粗显示耗材"
+
+msgid "MMU show color in gates"
+msgstr "MMU 在通道中显示颜色"
+
+msgid "MMU show colored filament"
+msgstr "MMU 显示彩色耗材"
+
+msgid "MMU use SpoolMan for filaments"
+msgstr "MMU 使用 SpoolMan 管理耗材"
+
 msgid "Macro shortcut on sidebar"
 msgstr "在侧边栏中显示宏按钮"
 
@@ -517,6 +776,12 @@ msgstr "宏"
 
 msgid "Main Menu"
 msgstr "主菜单"
+
+msgid "Manage TTG..."
+msgstr "管理 TTG..."
+
+msgid "Manage..."
+msgstr "管理..."
 
 msgid "Material"
 msgstr "材料"
@@ -529,9 +794,6 @@ msgstr "最大加速度"
 
 msgid "Max Velocity"
 msgstr "最大速度"
-
-msgid "Max:"
-msgstr "最大："
 
 msgid "Maximum"
 msgstr "最大"
@@ -569,6 +831,12 @@ msgstr "Moonraker: 已连接"
 msgid "More"
 msgstr "更多设置"
 
+msgid "More..."
+msgstr "更多..."
+
+msgid "Motors Off"
+msgstr "关闭电机"
+
 msgid "Move"
 msgstr "移动"
 
@@ -596,8 +864,8 @@ msgstr "从不"
 msgid "New"
 msgstr "新的值"
 
-msgid "No elegible macros:"
-msgstr "无可用宏："
+msgid "No eligible macros:"
+msgstr "没有可用宏："
 
 msgid "No info available"
 msgstr "无可用信息"
@@ -649,6 +917,9 @@ msgstr "密码已保存"
 msgid "Pause"
 msgstr "暂停"
 
+msgid "Pause Locked"
+msgstr "暂停已锁定"
+
 msgid "Paused"
 msgstr "已暂停"
 
@@ -670,6 +941,13 @@ msgstr "电源"
 msgid "Power On Printer"
 msgstr "打印机通电"
 
+#, python-brace-format
+msgid "Preload Gate #{i}"
+msgstr "预载通道 #{i}"
+
+msgid "Preload Gate..."
+msgstr "预载通道..."
+
 msgid "Pressure Advance"
 msgstr "压力提前"
 
@@ -684,6 +962,9 @@ msgstr "打印"
 
 msgid "Print Control"
 msgstr "打印控制"
+
+msgid "Print Stats"
+msgstr "打印统计"
 
 msgid "Printer"
 msgstr "打印机"
@@ -721,17 +1002,41 @@ msgstr "版本回退（清空修改内容）"
 msgid "Recover Soft"
 msgstr "版本回退（保留修改内容）"
 
+msgid "Recover State..."
+msgstr "恢复状态..."
+
 msgid "Reference"
 msgstr "参考"
 
 msgid "Refresh"
 msgstr "检查更新"
 
+msgid "Release"
+msgstr "释放"
+
+msgid "Remaining length"
+msgstr "剩余长度"
+
+msgid "Remaining weight"
+msgstr "剩余重量"
+
 msgid "Remove network"
 msgstr "删除网络"
 
 msgid "Rename/Move:"
 msgstr "重命名/移动："
+
+msgid "Reset"
+msgstr "重置"
+
+msgid "Reset MMU..."
+msgstr "重置 MMU..."
+
+msgid "Reset Stats"
+msgstr "重置统计"
+
+msgid "Reset state to:"
+msgstr "将状态重置为："
 
 msgid "Restart"
 msgstr "重启"
@@ -791,8 +1096,46 @@ msgstr "螺丝调整"
 msgid "Screws not used:"
 msgstr "未使用调平螺丝:"
 
+msgid "Selct: "
+msgstr "选择: "
+
+msgid "Select Bypass"
+msgstr "选择旁路"
+
+#, python-brace-format
+msgid "Select Gate #{i}"
+msgstr "选择通道 #{i}"
+
+msgid "Select Gate..."
+msgstr "选择通道..."
+
+#, python-brace-format
+msgid "Select Tool T{i}"
+msgstr "选择工具 T{i}"
+
 msgid "Send"
 msgstr "发送"
+
+msgid "Servo DOWN"
+msgstr "舵机下位"
+
+msgid "Servo Down"
+msgstr "舵机下位"
+
+msgid "Servo MOVE"
+msgstr "舵机移动位"
+
+msgid "Servo Move"
+msgstr "舵机移动位"
+
+msgid "Servo UP"
+msgstr "舵机上位"
+
+msgid "Servo Up"
+msgstr "舵机上位"
+
+msgid "Set State..."
+msgstr "设置状态..."
 
 msgid "Set Temp"
 msgstr "设定温度"
@@ -845,6 +1188,12 @@ msgstr "速度 -"
 msgid "Speed:"
 msgstr "速度："
 
+msgid "SpoolID:"
+msgstr "料盘ID："
+
+msgid "Spoolman..."
+msgstr "Spoolman..."
+
 msgid "Square Corner Velocity"
 msgstr "直角拐弯速度"
 
@@ -854,6 +1203,12 @@ msgstr "待机"
 msgid "Start"
 msgstr "开始"
 
+msgid "Started"
+msgstr "已开始"
+
+msgid "Starting WiFi Association"
+msgstr "开始WiFi连接"
+
 msgid "Starting recovery for"
 msgstr "开始恢复"
 
@@ -862,6 +1217,9 @@ msgstr "开始更新"
 
 msgid "Swaps buttons if they are on top of each other, affects other panels"
 msgstr "交换Z轴按钮位置，此设置影响其他的控制面板"
+
+msgid "Sync"
+msgstr "同步"
 
 msgid "System"
 msgstr "系统"
@@ -884,6 +1242,9 @@ msgstr "温度"
 msgid "Temperature too low to extrude"
 msgstr "温度过低无法挤出"
 
+msgid "Test Grip"
+msgstr "测试夹持"
+
 msgid "The system doesn't meet the minimum requirement"
 msgstr "当前系统不满足最低要求"
 
@@ -893,14 +1254,101 @@ msgstr "这个界面支持最多9个调平螺丝以3x3阵列显示"
 msgid "This will affect screw positions and mesh graph"
 msgstr "这将影响调平螺丝位置和网格图"
 
+msgid "This will calibrate all gates. Are you sure?"
+msgstr "这将校准所有通道。确定吗？"
+
+msgid ""
+"This will reset MMU positional state and require re-homing\n"
+"\n"
+"Sure you want to continue?"
+msgstr ""
+"这将重置 MMU 位置状态，并需要重新归位\n"
+"\n"
+"确定要继续吗？"
+
+msgid ""
+"This will reset persisted MMU state to defaults including TTG map,\n"
+"\n"
+"EndlessSpool groups, Gate map (material and type) and current selector "
+"position\n"
+"\n"
+"Sure you want to continue?"
+msgstr ""
+"这会将持久保存的 MMU 状态重置为默认值，包括 TTG 映射、\n"
+"\n"
+"EndlessSpool 组、通道映射（材料和类型）以及当前选择器位置\n"
+"\n"
+"确定要继续吗？"
+
+msgid ""
+"This will reset the TTG map and EndlessSpool groups\n"
+"\n"
+"to the default defined in your MMU configuration\n"
+"\n"
+"Are you sure you want to continue?"
+msgstr ""
+"这将把 TTG 映射和 EndlessSpool 组\n"
+"\n"
+"重置为 MMU 配置中定义的默认值\n"
+"\n"
+"确定要继续吗？"
+
+msgid ""
+"This will set the MMU TTG map and ALL EndlessSpool groups\n"
+"\n"
+"to the configuration defined on this panel\n"
+"\n"
+"Are you sure you want to continue?"
+msgstr ""
+"这将把 MMU TTG 映射和所有 EndlessSpool 组\n"
+"\n"
+"设置为此面板中定义的配置\n"
+"\n"
+"确定要继续吗？"
+
+#, python-brace-format
+msgid ""
+"This will set the MMU state to:\n"
+"\n"
+"{summary}{warning}\n"
+"\n"
+"Sure you want to continue?"
+msgstr ""
+"这将把 MMU 状态设置为：\n"
+"\n"
+"{summary}{warning}\n"
+"\n"
+"确定要继续吗？"
+
 msgid "Timeout for screen black-out or power-off"
 msgstr "自动息屏的时间"
 
 msgid "Timeout for screen black-out or power-off during printing"
 msgstr "打印中自动息屏的时间"
 
+#, python-brace-format
+msgid "Tool: {tool}"
+msgstr "工具：{tool}"
+
+msgid "Tools..."
+msgstr "工具..."
+
+msgid "Tools: "
+msgstr "工具: "
+
 msgid "Total:"
 msgstr "合计："
+
+#, python-brace-format
+msgid "T{i}"
+msgstr "T{i}"
+
+#, python-brace-format
+msgid "T{tool} on Gate #{gate} with filament {filament}"
+msgstr "T{tool} 位于通道 #{gate}，耗材：{filament}"
+
+msgid "Unknown"
+msgstr "未知"
 
 msgid "Unknown Heater"
 msgstr "未知加热器"
@@ -910,6 +1358,15 @@ msgstr "未知的安全类型"
 
 msgid "Unload"
 msgstr "卸载耗材"
+
+msgid "Unload Ext"
+msgstr "卸载挤出机"
+
+msgid "Unloaded"
+msgstr "已卸载"
+
+msgid "Unloading"
+msgstr "正在卸载"
 
 msgid "Unlock"
 msgstr "解锁"
@@ -922,6 +1379,9 @@ msgstr "回料长度"
 
 msgid "Unretract Speed"
 msgstr "回料速度"
+
+msgid "Unsync"
+msgstr "取消同步"
 
 msgid "Up To Date"
 msgstr "最新版本"
@@ -949,6 +1409,9 @@ msgstr "XY轴移动速度（mm/s）"
 
 msgid "XY Speed (mm/s)"
 msgstr "XY轴速度（mm/s）"
+
+msgid "You are probably trying to connect to an incompatible"
+msgstr "你可能正在尝试连接到不兼容的"
 
 msgid "Z Calibrate"
 msgstr "Z偏移校准"
@@ -980,6 +1443,9 @@ msgid "hour"
 msgid_plural "hours"
 msgstr[0] "小时"
 
+msgid "is up-to-date, re-run Happy-Hare/install.sh on the"
+msgstr "已是最新版本，请在打印机上重新运行 Happy-Hare/install.sh，"
+
 msgid "macros that use 'rename_existing' are hidden"
 msgstr "使用\"rename_existing\"的宏将被隐藏"
 
@@ -1002,6 +1468,12 @@ msgstr "mm/s²"
 msgid "mm³/s"
 msgstr "mm³/s"
 
+msgid "n/a"
+msgstr "无"
+
+msgid "printer, then make sure you restart Klipper."
+msgstr "然后确保重启 Klipper。"
+
 msgid "s"
 msgstr "秒"
 
@@ -1009,14 +1481,24 @@ msgid "second"
 msgid_plural "seconds"
 msgstr[0] "秒"
 
+msgid "user def"
+msgstr "用户定义"
+
+msgid "version of Happy Hare on your printer. Ensure Happy Hare"
+msgstr "打印机上的 Happy Hare 版本。请确保 Happy Hare"
+
+#, python-brace-format
+msgid "{action}: {position}mm"
+msgstr "{action}：{position}mm"
+
+#~ msgid "Max:"
+#~ msgstr "最大："
+
 #~ msgid "Hide temp."
 #~ msgstr "隐藏温度"
 
 #~ msgid "PSK for"
 #~ msgstr "PSK"
-
-#~ msgid "Are you sure you want to stop the calibration?"
-#~ msgstr "您确定要停止校准吗？"
 
 #~ msgid "Do you want to let KlipperScreen try to solve the issue?"
 #~ msgstr "你想让KlipperScreen尝试解决这个问题吗？"
@@ -1026,9 +1508,6 @@ msgstr[0] "秒"
 
 #~ msgid "Mesh calibrate"
 #~ msgstr "床网校准"
-
-#~ msgid "Uploaded"
-#~ msgstr "上传于"
 
 #~ msgid "Ended official support in June 2023"
 #~ msgstr "2023年6月结束官方支持"
@@ -1042,9 +1521,6 @@ msgstr[0] "秒"
 #~ msgid "Print Time"
 #~ msgstr "打印用时"
 
-#~ msgid "Starting WiFi Association"
-#~ msgstr "开始WiFi连接"
-
 #~ msgid "Warning"
 #~ msgstr "警告"
 
@@ -1053,9 +1529,6 @@ msgstr[0] "秒"
 
 #~ msgid "Deselect"
 #~ msgstr "取消选择"
-
-#~ msgid "Select"
-#~ msgstr "选择"
 
 #~ msgid "Bed screw configuration:"
 #~ msgstr "热床螺丝配置："
@@ -1086,17 +1559,11 @@ msgstr[0] "秒"
 #~ msgid "Homing"
 #~ msgstr "归零"
 
-#~ msgid "Disable XY"
-#~ msgstr "关闭 XY 轴电机"
-
 #~ msgid "Slicer Time correction (%)"
 #~ msgstr "切片软件时间校正(%)"
 
 #~ msgid "Calibrated, save configuration to make it permanent"
 #~ msgstr "已校准，保存配置后生效"
-
-#~ msgid "Decrease"
-#~ msgstr "减少"
 
 #~ msgid "Increase"
 #~ msgstr "增加"
@@ -1142,12 +1609,6 @@ msgstr[0] "秒"
 
 #~ msgid "Probe found applied offset"
 #~ msgstr "找到探头偏移"
-
-#~ msgid "Tool"
-#~ msgstr "工具"
-
-#~ msgid "Displayed Macros"
-#~ msgstr "宏命令显示开关"
 
 #~ msgid "Z Position"
 #~ msgstr "Z 位置"

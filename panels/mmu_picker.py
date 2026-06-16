@@ -10,6 +10,7 @@ gi.require_version("Gtk", "3.0")
 
 from gi.repository import Gtk, GLib, Pango, Gdk
 from ks_includes.screen_panel import ScreenPanel
+from panels.mmu_utils import format_gate
 
 class Panel(ScreenPanel):
     TOOL_UNKNOWN = -1
@@ -43,7 +44,7 @@ class Panel(ScreenPanel):
         for i in range(num_tools):
             status_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
             status = self.labels[f'status_{i}'] = self._gtk.Image()
-            available = self.labels[f'available_{i}'] = Gtk.Label("Unknown")
+            available = self.labels[f'available_{i}'] = Gtk.Label(_("Unknown"))
             available.get_style_context().add_class("mmu_available_text")
             status_box.pack_start(status, True, True, 0)
             status_box.pack_start(available, True, True, 0)
@@ -108,7 +109,7 @@ class Panel(ScreenPanel):
             if not Gdk.RGBA.parse(color, color_str if color_str else ""):
                 Gdk.RGBA.parse(color, '#' + color_str if color_str else "")
 
-            gate_str = (f"Gate #{t_map['gate']}")
+            gate_str = format_gate(t_map['gate'])
             alt_gate_str = ''
             if endless_spool == 1 and len(t_map['alt_gates']) > 0:
                 alt_gate_str = '+(' + ', '.join(map(str, t_map['alt_gates'][:6]))
@@ -132,19 +133,19 @@ class Panel(ScreenPanel):
     def get_status_details(self, gate_status):
         if gate_status == self.GATE_AVAILABLE:
             status_icon = 'available_icon'
-            status_str = "Available"
+            status_str = _("Available")
             status_color = self.COLOR_GREEN
         elif gate_status == self.GATE_AVAILABLE_FROM_BUFFER:
             status_icon = 'available_icon'
-            status_str = "Buffered"
+            status_str = _("Buffered")
             status_color = self.COLOR_GREEN
         elif gate_status == self.GATE_EMPTY:
             status_icon = 'empty_icon'
-            status_str = "Empty"
+            status_str = _("Empty")
             status_color = self.COLOR_RED
         else: 
             status_icon = 'unknown_icon'
-            status_str = "Unknown"
+            status_str = _("Unknown")
             status_color = self.COLOR_LIGHT_GREY
         return status_icon, status_str, status_color
 
@@ -185,4 +186,3 @@ class Panel(ScreenPanel):
         else:
             self._screen._ws.klippy.gcode_script(f"MMU_CHANGE_TOOL TOOL={selected_tool}")
             self._screen._menu_go_back()
-

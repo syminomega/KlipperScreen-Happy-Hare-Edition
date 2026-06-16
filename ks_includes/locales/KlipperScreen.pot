@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-26 12:31-0300\n"
+"POT-Creation-Date: 2026-06-16 23:04+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#, python-brace-format
+msgid ""
+"\n"
+"\n"
+"Specified gate may not be the correct gate for T{tool}.\n"
+"Proceeding will update the TTG map and mark the gate available"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"\n"
+"EndlessSpool group includes gates: {gates}"
+msgstr ""
 
 #, python-format
 msgid "%s will be updated to version"
@@ -66,6 +80,9 @@ msgstr ""
 msgid "Are you sure do you want to exclude the object?"
 msgstr ""
 
+msgid "Are you sure you want to reset MMU statistics?"
+msgstr ""
+
 msgid "Are you sure you want to run Emergency Stop?"
 msgstr ""
 
@@ -81,10 +98,16 @@ msgstr ""
 msgid "Are you sure you wish to shutdown the system?"
 msgstr ""
 
+msgid "Are you sure?"
+msgstr ""
+
 msgid "Asks for confirmation before stopping"
 msgstr ""
 
 msgid "Auto"
+msgstr ""
+
+msgid "Auto Recover"
 msgstr ""
 
 msgid "Auto-calibrate"
@@ -99,6 +122,12 @@ msgstr ""
 msgid "Auto-scroll"
 msgstr ""
 
+msgid "Avail: "
+msgstr ""
+
+msgid "Available"
+msgstr ""
+
 msgid "Bed Level"
 msgstr ""
 
@@ -108,7 +137,30 @@ msgstr ""
 msgid "Both"
 msgstr ""
 
+msgid "Buffered"
+msgstr ""
+
+msgid "Bypass"
+msgstr ""
+
+#, python-brace-format
+msgid "Bypass (on bypass gate) with filament {filament}"
+msgstr ""
+
+msgid "Cal. Encoder"
+msgstr ""
+
+msgid "Cal. Gate..."
+msgstr ""
+
 msgid "Calibrate"
+msgstr ""
+
+#, python-brace-format
+msgid "Calibrate #{i}"
+msgstr ""
+
+msgid "Calibrate ALL"
 msgstr ""
 
 msgid "Calibrated"
@@ -150,10 +202,38 @@ msgstr ""
 msgid "Check ADXL Wiring"
 msgstr ""
 
+msgid "Check Gate"
+msgstr ""
+
+#, python-brace-format
+msgid "Check Gate #{i}"
+msgstr ""
+
+msgid "Check Gate..."
+msgstr ""
+
+msgid ""
+"Check filament availability in all MMU gates?\n"
+"\n"
+"Are you sure you want to continue?"
+msgstr ""
+
 msgid "Checking for updates, please wait..."
 msgstr ""
 
 msgid "Clear"
+msgstr ""
+
+msgid "Clog"
+msgstr ""
+
+msgid "Clog (Auto)"
+msgstr ""
+
+msgid "Clog (Man)"
+msgstr ""
+
+msgid "Clog Off"
 msgstr ""
 
 msgid "Close"
@@ -162,10 +242,16 @@ msgstr ""
 msgid "Close messages after a timeout"
 msgstr ""
 
+msgid "Comment"
+msgstr ""
+
 msgid "Complete"
 msgstr ""
 
 msgid "Confirm Emergency Stop"
+msgstr ""
+
+msgid "Confirm TTG/EndlessSpool Reset"
 msgstr ""
 
 msgid "Connected"
@@ -193,10 +279,13 @@ msgstr ""
 msgid "Current"
 msgstr ""
 
+msgid "Current MMU state:"
+msgstr ""
+
 msgid "Current percentage and graph line"
 msgstr ""
 
-msgid "DPMS has failed to load and has been disabled"
+msgid "DPMS has failed and has been disabled"
 msgstr ""
 
 msgid "Date"
@@ -211,13 +300,25 @@ msgstr ""
 msgid "Delete File?"
 msgstr ""
 
+msgid "Disable E.Spool"
+msgstr ""
+
+msgid "Disable LED"
+msgstr ""
+
 msgid "Disable Motors"
 msgstr ""
 
 msgid "Disable for 12hs with am / pm"
 msgstr ""
 
+msgid "Disabled"
+msgstr ""
+
 msgid "Disconnect"
+msgstr ""
+
+msgid "Display Status"
 msgstr ""
 
 msgid "Distance (mm)"
@@ -231,13 +332,42 @@ msgstr ""
 msgid "Do you want to recover %s?"
 msgstr ""
 
+msgid "ES Group: A"
+msgstr ""
+
+#, python-brace-format
+msgid "ES Group: {group}"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Eject"
+msgstr ""
+
+#, python-brace-format
+msgid "Eject Gate #{i}"
+msgstr ""
+
+msgid "Eject Gate..."
+msgstr ""
+
 msgid "Elapsed:"
 msgstr ""
 
 msgid "Emergency Stop"
 msgstr ""
 
+msgid "Empty"
+msgstr ""
+
+msgid "Enable E.Spool"
+msgstr ""
+
 msgid "Enable screen power management"
+msgstr ""
+
+msgid "EndlessSpool - Editing"
 msgstr ""
 
 msgid "Error"
@@ -276,6 +406,9 @@ msgstr ""
 msgid "Extrude"
 msgstr ""
 
+msgid "Extrude..."
+msgstr ""
+
 msgid "Extruders"
 msgstr ""
 
@@ -310,6 +443,26 @@ msgid "Filament used:"
 msgstr ""
 
 msgid "Filament:"
+msgstr ""
+
+msgid "Filament: Loaded"
+msgstr ""
+
+msgid "Filament: Unknown"
+msgstr ""
+
+msgid "Filament: Unloaded"
+msgstr ""
+
+#, python-brace-format
+msgid "Filament: {filament}"
+msgstr ""
+
+#, python-brace-format
+msgid "Filament: {position}mm"
+msgstr ""
+
+msgid "Filaments..."
 msgstr ""
 
 msgid "File"
@@ -348,7 +501,30 @@ msgstr ""
 msgid "Forget"
 msgstr ""
 
+msgid "Form Tip"
+msgstr ""
+
 msgid "Full Update"
+msgstr ""
+
+msgid "Gate"
+msgstr ""
+
+msgid "Gate #0"
+msgstr ""
+
+#, python-brace-format
+msgid "Gate #{gate}"
+msgstr ""
+
+#, python-brace-format
+msgid "Gate: {gate}"
+msgstr ""
+
+msgid "Gates"
+msgstr ""
+
+msgid "Gates: "
 msgstr ""
 
 msgid "Gcodes"
@@ -358,6 +534,9 @@ msgid "Getting IP address"
 msgstr ""
 
 msgid "Go Back"
+msgstr ""
+
+msgid "Grip"
 msgstr ""
 
 msgid "Height:"
@@ -396,7 +575,13 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
+msgid "IP Address"
+msgstr ""
+
 msgid "Icon Theme"
+msgstr ""
+
+msgid "Idle"
 msgstr ""
 
 msgid "Initializing printer..."
@@ -462,6 +647,12 @@ msgstr ""
 msgid "Klipper will reboot"
 msgstr ""
 
+msgid "LED Fil. Color"
+msgstr ""
+
+msgid "LED Gate Status"
+msgstr ""
+
 msgid ""
 "LOAD_FILAMENT/UNLOAD_FILAMENT are hidden and should be used from extrude"
 msgstr ""
@@ -475,7 +666,17 @@ msgstr ""
 msgid "Last Duration"
 msgstr ""
 
+msgid "Last Error"
+msgstr ""
+
+#, python-brace-format
+msgid "Last Toolchange: {last_toolchange}"
+msgstr ""
+
 msgid "Last Used"
+msgstr ""
+
+msgid "Last used"
 msgstr ""
 
 msgid "Layer Height"
@@ -496,6 +697,25 @@ msgstr ""
 msgid "Load"
 msgstr ""
 
+#, python-brace-format
+msgid "Load #{gate}"
+msgstr ""
+
+msgid "Load Ext"
+msgstr ""
+
+msgid "Load T0"
+msgstr ""
+
+msgid "Load Tool..."
+msgstr ""
+
+msgid "Loaded"
+msgstr ""
+
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr ""
 
@@ -508,6 +728,36 @@ msgstr ""
 msgid "Lower Nozzle"
 msgstr ""
 
+msgid "MMU"
+msgstr ""
+
+msgid "MMU Pause"
+msgstr ""
+
+msgid "MMU Setup"
+msgstr ""
+
+msgid "MMU State Recovery"
+msgstr ""
+
+msgid "MMU Tool Picker"
+msgstr ""
+
+msgid "MMU shortcut on sidebar"
+msgstr ""
+
+msgid "MMU show bold filament"
+msgstr ""
+
+msgid "MMU show color in gates"
+msgstr ""
+
+msgid "MMU show colored filament"
+msgstr ""
+
+msgid "MMU use SpoolMan for filaments"
+msgstr ""
+
 msgid "Macro shortcut on sidebar"
 msgstr ""
 
@@ -515,6 +765,12 @@ msgid "Macros"
 msgstr ""
 
 msgid "Main Menu"
+msgstr ""
+
+msgid "Manage TTG..."
+msgstr ""
+
+msgid "Manage..."
 msgstr ""
 
 msgid "Material"
@@ -527,9 +783,6 @@ msgid "Max Acceleration"
 msgstr ""
 
 msgid "Max Velocity"
-msgstr ""
-
-msgid "Max:"
 msgstr ""
 
 msgid "Maximum"
@@ -568,6 +821,12 @@ msgstr ""
 msgid "More"
 msgstr ""
 
+msgid "More..."
+msgstr ""
+
+msgid "Motors Off"
+msgstr ""
+
 msgid "Move"
 msgstr ""
 
@@ -595,7 +854,7 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-msgid "No elegible macros:"
+msgid "No eligible macros:"
 msgstr ""
 
 msgid "No info available"
@@ -649,6 +908,9 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
+msgid "Pause Locked"
+msgstr ""
+
 msgid "Paused"
 msgstr ""
 
@@ -670,6 +932,13 @@ msgstr ""
 msgid "Power On Printer"
 msgstr ""
 
+#, python-brace-format
+msgid "Preload Gate #{i}"
+msgstr ""
+
+msgid "Preload Gate..."
+msgstr ""
+
 msgid "Pressure Advance"
 msgstr ""
 
@@ -683,6 +952,9 @@ msgid "Print"
 msgstr ""
 
 msgid "Print Control"
+msgstr ""
+
+msgid "Print Stats"
 msgstr ""
 
 msgid "Printer"
@@ -721,16 +993,40 @@ msgstr ""
 msgid "Recover Soft"
 msgstr ""
 
+msgid "Recover State..."
+msgstr ""
+
 msgid "Reference"
 msgstr ""
 
 msgid "Refresh"
 msgstr ""
 
+msgid "Release"
+msgstr ""
+
+msgid "Remaining length"
+msgstr ""
+
+msgid "Remaining weight"
+msgstr ""
+
 msgid "Remove network"
 msgstr ""
 
 msgid "Rename/Move:"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Reset MMU..."
+msgstr ""
+
+msgid "Reset Stats"
+msgstr ""
+
+msgid "Reset state to:"
 msgstr ""
 
 msgid "Restart"
@@ -791,7 +1087,45 @@ msgstr ""
 msgid "Screws not used:"
 msgstr ""
 
+msgid "Selct: "
+msgstr ""
+
+msgid "Select Bypass"
+msgstr ""
+
+#, python-brace-format
+msgid "Select Gate #{i}"
+msgstr ""
+
+msgid "Select Gate..."
+msgstr ""
+
+#, python-brace-format
+msgid "Select Tool T{i}"
+msgstr ""
+
 msgid "Send"
+msgstr ""
+
+msgid "Servo DOWN"
+msgstr ""
+
+msgid "Servo Down"
+msgstr ""
+
+msgid "Servo MOVE"
+msgstr ""
+
+msgid "Servo Move"
+msgstr ""
+
+msgid "Servo UP"
+msgstr ""
+
+msgid "Servo Up"
+msgstr ""
+
+msgid "Set State..."
 msgstr ""
 
 msgid "Set Temp"
@@ -845,6 +1179,12 @@ msgstr ""
 msgid "Speed:"
 msgstr ""
 
+msgid "SpoolID:"
+msgstr ""
+
+msgid "Spoolman..."
+msgstr ""
+
 msgid "Square Corner Velocity"
 msgstr ""
 
@@ -854,6 +1194,12 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
+msgid "Started"
+msgstr ""
+
+msgid "Starting WiFi Association"
+msgstr ""
+
 msgid "Starting recovery for"
 msgstr ""
 
@@ -861,6 +1207,9 @@ msgid "Starting update for"
 msgstr ""
 
 msgid "Swaps buttons if they are on top of each other, affects other panels"
+msgstr ""
+
+msgid "Sync"
 msgstr ""
 
 msgid "System"
@@ -884,6 +1233,9 @@ msgstr ""
 msgid "Temperature too low to extrude"
 msgstr ""
 
+msgid "Test Grip"
+msgstr ""
+
 msgid "The system doesn't meet the minimum requirement"
 msgstr ""
 
@@ -893,13 +1245,77 @@ msgstr ""
 msgid "This will affect screw positions and mesh graph"
 msgstr ""
 
+msgid "This will calibrate all gates. Are you sure?"
+msgstr ""
+
+msgid ""
+"This will reset MMU positional state and require re-homing\n"
+"\n"
+"Sure you want to continue?"
+msgstr ""
+
+msgid ""
+"This will reset persisted MMU state to defaults including TTG map,\n"
+"\n"
+"EndlessSpool groups, Gate map (material and type) and current selector "
+"position\n"
+"\n"
+"Sure you want to continue?"
+msgstr ""
+
+msgid ""
+"This will reset the TTG map and EndlessSpool groups\n"
+"\n"
+"to the default defined in your MMU configuration\n"
+"\n"
+"Are you sure you want to continue?"
+msgstr ""
+
+msgid ""
+"This will set the MMU TTG map and ALL EndlessSpool groups\n"
+"\n"
+"to the configuration defined on this panel\n"
+"\n"
+"Are you sure you want to continue?"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"This will set the MMU state to:\n"
+"\n"
+"{summary}{warning}\n"
+"\n"
+"Sure you want to continue?"
+msgstr ""
+
 msgid "Timeout for screen black-out or power-off"
 msgstr ""
 
 msgid "Timeout for screen black-out or power-off during printing"
 msgstr ""
 
+#, python-brace-format
+msgid "Tool: {tool}"
+msgstr ""
+
+msgid "Tools..."
+msgstr ""
+
+msgid "Tools: "
+msgstr ""
+
 msgid "Total:"
+msgstr ""
+
+#, python-brace-format
+msgid "T{i}"
+msgstr ""
+
+#, python-brace-format
+msgid "T{tool} on Gate #{gate} with filament {filament}"
+msgstr ""
+
+msgid "Unknown"
 msgstr ""
 
 msgid "Unknown Heater"
@@ -909,6 +1325,15 @@ msgid "Unknown security type"
 msgstr ""
 
 msgid "Unload"
+msgstr ""
+
+msgid "Unload Ext"
+msgstr ""
+
+msgid "Unloaded"
+msgstr ""
+
+msgid "Unloading"
 msgstr ""
 
 msgid "Unlock"
@@ -921,6 +1346,9 @@ msgid "Unretract Extra Length"
 msgstr ""
 
 msgid "Unretract Speed"
+msgstr ""
+
+msgid "Unsync"
 msgstr ""
 
 msgid "Up To Date"
@@ -948,6 +1376,9 @@ msgid "XY Move Speed (mm/s)"
 msgstr ""
 
 msgid "XY Speed (mm/s)"
+msgstr ""
+
+msgid "You are probably trying to connect to an incompatible"
 msgstr ""
 
 msgid "Z Calibrate"
@@ -983,6 +1414,9 @@ msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "is up-to-date, re-run Happy-Hare/install.sh on the"
+msgstr ""
+
 msgid "macros that use 'rename_existing' are hidden"
 msgstr ""
 
@@ -1006,6 +1440,12 @@ msgstr ""
 msgid "mm³/s"
 msgstr ""
 
+msgid "n/a"
+msgstr ""
+
+msgid "printer, then make sure you restart Klipper."
+msgstr ""
+
 msgid "s"
 msgstr ""
 
@@ -1013,3 +1453,13 @@ msgid "second"
 msgid_plural "seconds"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "user def"
+msgstr ""
+
+msgid "version of Happy Hare on your printer. Ensure Happy Hare"
+msgstr ""
+
+#, python-brace-format
+msgid "{action}: {position}mm"
+msgstr ""

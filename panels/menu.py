@@ -128,7 +128,9 @@ class Panel(ScreenPanel):
             b = self._gtk.Button(icon, name, style or f"color{i % 4 + 1}", scale=scale)
 
             if item['panel']:
-                b.connect("clicked", self.menu_item_clicked, item)
+                panel_item = item.copy()
+                panel_item['name'] = name
+                b.connect("clicked", self.menu_item_clicked, panel_item)
             elif item['method'] == "ks_confirm_save":
                 b.connect("clicked", self._screen.confirm_save)
             elif item['method']:
@@ -143,7 +145,8 @@ class Panel(ScreenPanel):
                         params = {}
 
                 if item['confirm'] is not None:
-                    b.connect("clicked", self._screen._confirm_send_action, item['confirm'], item['method'], params)
+                    confirm = self._screen.env.from_string(item['confirm']).render(self.j2_data)
+                    b.connect("clicked", self._screen._confirm_send_action, confirm, item['method'], params)
                 else:
                     params['show_disabled'] = item.get('show_disabled', "False").strip().lower() == "true" # Happy Hare: Need to know if dynamic sensitivity
                     b.connect("clicked", self._screen._send_action, item['method'], params)

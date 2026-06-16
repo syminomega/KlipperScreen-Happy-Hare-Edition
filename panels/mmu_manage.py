@@ -10,6 +10,7 @@ gi.require_version("Gtk", "3.0")
 
 from gi.repository import Gtk, GLib, Pango
 from ks_includes.screen_panel import ScreenPanel
+from panels.mmu_utils import format_gate, format_mmu_state
 
 class Panel(ScreenPanel):
     TOOL_UNKNOWN = -1
@@ -54,23 +55,23 @@ class Panel(ScreenPanel):
 
         self.labels = {
             'g_decrease': self._gtk.Button('decrease', None, scale=self.bts * 1.2),
-            'gate': self._gtk.Button('mmu_select_gate', 'Gate', 'color4'),
+            'gate': self._gtk.Button('mmu_select_gate', _('Gate'), 'color4'),
             'g_increase': self._gtk.Button('increase', None, scale=self.bts * 1.2),
-            'servo_up': self._gtk.Button('arrow-up', 'Servo Up', 'color1'),
-            'servo_move': self._gtk.Button('arrow-right', 'Servo Move', 'color2'),
-            'servo_down': self._gtk.Button('arrow-down', 'Servo Down', 'color3'),
-            'grip': self._gtk.Button('arrow-down', 'Grip', 'color2'),
-            'release': self._gtk.Button('arrow-up', 'Release', 'color3'),
-            'home': self._gtk.Button('home', 'Home', 'color2'),
-            'motors_off': self._gtk.Button('motor-off', 'Motors Off', 'color3'),
-            'checkgate': self._gtk.Button('mmu_checkgates', 'Check Gate', 'color4'),
-            'recover': self._gtk.Button('mmu_maintenance', 'Recover State...', 'color1'),
-            'load': self._gtk.Button('mmu_load', 'Load', 'color1'),
-            'unload': self._gtk.Button('mmu_unload', 'Unload', 'color1'), # Doubles as eject button
-            'sync': self._gtk.Button('mmu_synced_extruder', 'Sync', 'color2'),
-            'unsync': self._gtk.Button('mmu_extruder', 'Unsync', 'color2'),
-            'load_ext': self._gtk.Button('mmu_load_extruder', 'Load Ext', 'color3'),
-            'unload_ext': self._gtk.Button('mmu_unload_extruder', 'Unload Ext', 'color3'),
+            'servo_up': self._gtk.Button('arrow-up', _('Servo Up'), 'color1'),
+            'servo_move': self._gtk.Button('arrow-right', _('Servo Move'), 'color2'),
+            'servo_down': self._gtk.Button('arrow-down', _('Servo Down'), 'color3'),
+            'grip': self._gtk.Button('arrow-down', _('Grip'), 'color2'),
+            'release': self._gtk.Button('arrow-up', _('Release'), 'color3'),
+            'home': self._gtk.Button('home', _('Home'), 'color2'),
+            'motors_off': self._gtk.Button('motor-off', _('Motors Off'), 'color3'),
+            'checkgate': self._gtk.Button('mmu_checkgates', _('Check Gate'), 'color4'),
+            'recover': self._gtk.Button('mmu_maintenance', _('Recover State...'), 'color1'),
+            'load': self._gtk.Button('mmu_load', _('Load'), 'color1'),
+            'unload': self._gtk.Button('mmu_unload', _('Unload'), 'color1'), # Doubles as eject button
+            'sync': self._gtk.Button('mmu_synced_extruder', _('Sync'), 'color2'),
+            'unsync': self._gtk.Button('mmu_extruder', _('Unsync'), 'color2'),
+            'load_ext': self._gtk.Button('mmu_load_extruder', _('Load Ext'), 'color3'),
+            'unload_ext': self._gtk.Button('mmu_unload_extruder', _('Unload Ext'), 'color3'),
             'eject_img': self._gtk.Image('mmu_eject'), # Alternative for unload button to fully eject
         }
         self.labels['unload_img'] = self.labels['unload'].get_image()
@@ -79,7 +80,7 @@ class Panel(ScreenPanel):
         self.labels['gate'].connect("clicked", self.select_gate, 0)
         self.labels['g_increase'].connect("clicked", self.select_gate, 1)
         self.labels['checkgate'].connect("clicked", self.select_checkgate)
-        self.labels['recover'].connect("clicked", self.menu_item_clicked, {"panel": "mmu_recover", "name": "MMU State Recovery"})
+        self.labels['recover'].connect("clicked", self.menu_item_clicked, {"panel": "mmu_recover", "name": _("MMU State Recovery")})
         self.labels['load'].connect("clicked", self.select_load)
         self.labels['unload'].connect("clicked", self.select_unload_eject)
         self.labels['home'].connect("clicked", self.select_home)
@@ -157,9 +158,9 @@ class Panel(ScreenPanel):
                 if 'gate' in e_data:
                     self.ui_sel_gate = e_data['gate']
                     if e_data['gate'] >= 0:
-                        self.labels['load'].set_label(f"Load #{e_data['gate']}")
+                        self.labels['load'].set_label(_("Load #{gate}").format(gate=e_data['gate']))
                     else:
-                        self.labels['load'].set_label(f"Load")
+                        self.labels['load'].set_label(_("Load"))
                 if 'action' in e_data:
                     action = e_data['action']
                     if self.ui_action_button_name != None:
@@ -167,7 +168,7 @@ class Panel(ScreenPanel):
                             self.labels[self.ui_action_button_name].set_label(self.ui_action_button_label) # Restore original button label
                             self.ui_action_button_name = None
                         else:
-                            self.labels[self.ui_action_button_name].set_label(action) # Use button to convey action status
+                            self.labels[self.ui_action_button_name].set_label(format_mmu_state(action)) # Use button to convey action status
                 self.update_active_buttons()
 
     def init_gate_values(self):
@@ -255,7 +256,7 @@ class Panel(ScreenPanel):
     def select_motors_off(self, widget):
         self._screen._confirm_send_action(
             None,
-            "This will reset MMU positional state and require re-homing\n\nSure you want to continue?",
+            _("This will reset MMU positional state and require re-homing\n\nSure you want to continue?"),
             "printer.gcode.script",
             {'script': "MMU_MOTORS_OFF"}
         )
@@ -318,10 +319,10 @@ class Panel(ScreenPanel):
 
             if filament != "Unloaded":
                 self.labels['unload'].set_image(self.labels['unload_img'])
-                self.labels['unload'].set_label("Unload")
+                self.labels['unload'].set_label(_("Unload"))
             else:
                 self.labels['unload'].set_image(self.labels['eject_img'])
-                self.labels['unload'].set_label("Eject")
+                self.labels['unload'].set_label(_("Eject"))
 
             if selector_type == 'RotarySelector':
                 grip = mmu.get('grip', None)
@@ -380,25 +381,24 @@ class Panel(ScreenPanel):
 
         if action == "Idle":
             if self.ui_sel_gate >= 0:
-                self.labels['gate'].set_label(f"Gate #{self.ui_sel_gate}")
+                self.labels['gate'].set_label(format_gate(self.ui_sel_gate))
                 if mmu['gate'] == self.ui_sel_gate:
                     self.labels['gate'].set_sensitive(False)
                 else:
                     self.labels['gate'].set_sensitive(gate_sensitive)
             elif self.ui_sel_gate == self.TOOL_BYPASS:
-                self.labels['gate'].set_label(f"Bypass")
+                self.labels['gate'].set_label(_("Bypass"))
                 if mmu['gate'] == self.ui_sel_gate:
                     self.labels['gate'].set_sensitive(False)
                 else:
                     self.labels['gate'].set_sensitive(gate_sensitive)
             else:
-                self.labels['gate'].set_label(f"Unknown")
+                self.labels['gate'].set_label(_("Unknown"))
         else:
-            self.labels['gate'].set_label(action)
+            self.labels['gate'].set_label(format_mmu_state(action))
             self.labels['gate'].set_sensitive(False)
 
         if self.ui_sel_gate == self.TOOL_BYPASS:
             self.labels['checkgate'].set_sensitive(False)
         elif gate_sensitive:
             self.labels['checkgate'].set_sensitive(True)
-

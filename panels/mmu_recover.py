@@ -10,6 +10,7 @@ gi.require_version("Gtk", "3.0")
 
 from gi.repository import Gtk, GLib, Pango
 from ks_includes.screen_panel import ScreenPanel
+from panels.mmu_utils import format_filament_state, format_gate, format_tool
 
 class Panel(ScreenPanel):
     TOOL_UNKNOWN = -1
@@ -47,12 +48,12 @@ class Panel(ScreenPanel):
             'tool': Gtk.Label("T0"),
             't_increase': self._gtk.Button('increase', None, scale=self.bts * 1.2),
             'g_decrease': self._gtk.Button('decrease', None, scale=self.bts * 1.2),
-            'gate': Gtk.Label("Gate #0"),
+            'gate': Gtk.Label(_("Gate #0")),
             'g_increase': self._gtk.Button('increase', None, scale=self.bts * 1.2),
-            'filament': Gtk.CheckButton("Filament: Unknown"),
-            'reset': self._gtk.Button('mmu_reset', 'Reset MMU...', 'color1'),
-            'auto': self._gtk.Button('mmu_recover_auto', 'Auto Recover', 'color2'),
-            'manual': self._gtk.Button('mmu_recover_manual', 'Set State...', 'color1'),
+            'filament': Gtk.CheckButton(_("Filament: Unknown")),
+            'reset': self._gtk.Button('mmu_reset', _('Reset MMU...'), 'color1'),
+            'auto': self._gtk.Button('mmu_recover_auto', _('Auto Recover'), 'color2'),
+            'manual': self._gtk.Button('mmu_recover_manual', _('Set State...'), 'color1'),
         }
 
         self.labels['t_decrease'].connect("clicked", self.select_toolgate, 'tool', -1)
@@ -83,8 +84,8 @@ class Panel(ScreenPanel):
             self.labels[i].set_xalign(0.5 if i.endswith("state") else 0)
             self.labels[i].set_yalign(0.7 if i.endswith("state") else 0.5)
             self.labels[i].get_style_context().add_class("mmu_recover")
-        self.labels['current_state'].set_label("Current MMU state:")
-        self.labels['future_state'].set_label("Reset state to:")
+        self.labels['current_state'].set_label(_("Current MMU state:"))
+        self.labels['future_state'].set_label(_("Reset state to:"))
 
         status_grid = Gtk.Grid()
         status_grid.set_column_homogeneous(True)
@@ -276,25 +277,25 @@ class Panel(ScreenPanel):
         if self.ui_sel_tool >= 0:
             self.labels['tool'].set_label(f"T{self.ui_sel_tool}")
         elif self.ui_sel_tool == self.TOOL_BYPASS:
-            self.labels['tool'].set_label(f"Bypass")
+            self.labels['tool'].set_label(_("Bypass"))
         else:
-            self.labels['tool'].set_label(f"n/a")
+            self.labels['tool'].set_label(_("n/a"))
 
         if self.ui_sel_gate >= 0:
-            self.labels['gate'].set_label(f"Gate #{self.ui_sel_gate}")
+            self.labels['gate'].set_label(format_gate(self.ui_sel_gate))
         elif self.ui_sel_gate == self.TOOL_BYPASS:
-            self.labels['gate'].set_label(f"Bypass")
+            self.labels['gate'].set_label(_("Bypass"))
         else:
-            self.labels['gate'].set_label(f"n/a")
+            self.labels['gate'].set_label(_("n/a"))
 
         if self.ui_sel_loaded == 1:
-            self.labels['filament'].set_label("Filament: Loaded")
+            self.labels['filament'].set_label(_("Filament: Loaded"))
             self.labels['filament'].set_active(True)
         elif self.ui_sel_loaded == 0:
-            self.labels['filament'].set_label("Filament: Unloaded")
+            self.labels['filament'].set_label(_("Filament: Unloaded"))
             self.labels['filament'].set_active(False)
         else:
-            self.labels['filament'].set_label("Filament: Unknown")
+            self.labels['filament'].set_label(_("Filament: Unknown"))
             self.labels['filament'].set_active(False)
 
     def update_state_labels(self):
@@ -303,34 +304,42 @@ class Panel(ScreenPanel):
         gate = mmu['gate']
         filament = mmu['filament']
 
-        tool_str = (f"T{tool}") if tool >= 0 else "Bypass" if tool == self.TOOL_BYPASS else "Unknown"
-        gate_str = (f"#{gate}") if gate >= 0 else "Bypass" if gate == self.TOOL_BYPASS else "Unknown"
-        self.labels['tool_label'].set_label(f"Tool: {tool_str}")
-        self.labels['gate_label'].set_label(f"Gate: {gate_str}")
-        self.labels['filament_label'].set_label(f"Filament: {filament}")
+        tool_str = format_tool(tool)
+        gate_str = format_gate(gate, with_label=False)
+        filament_str = format_filament_state(filament)
+        self.labels['tool_label'].set_label(_("Tool: {tool}").format(tool=tool_str))
+        self.labels['gate_label'].set_label(_("Gate: {gate}").format(gate=gate_str))
+        self.labels['filament_label'].set_label(_("Filament: {filament}").format(filament=filament_str))
 
     def select_manual(self, widget):
         mmu = self._printer.get_stat("mmu")
         endless_spool = mmu['endless_spool']
         warning = ""
-        loaded = "Loaded" if self.ui_sel_loaded == 1 else "Unloaded"
+        loaded = _("Loaded") if self.ui_sel_loaded == 1 else _("Unloaded")
         if self.ui_sel_gate != self.TOOL_BYPASS:
             suggested_gate, possible_gates = self.get_possible_gates(self.ui_sel_tool)
             if self.ui_sel_gate != suggested_gate:
-                warning = (f"\n\nSpecified gate may not the correct gate for T{self.ui_sel_tool}.\nProceed will update the TTG map and mark the gate available")
+                warning = _("\n\nSpecified gate may not be the correct gate for T{tool}.\nProceeding will update the TTG map and mark the gate available").format(tool=self.ui_sel_tool)
                 if endless_spool and len (possible_gates) > 1:
-                    warning += (f"\nEndlessSpool group includes gates: {possible_gates}")
-            summary = (f"T{self.ui_sel_tool} on Gate #{self.ui_sel_gate} with filament {loaded}")
+                    warning += _("\nEndlessSpool group includes gates: {gates}").format(gates=possible_gates)
+            summary = _("T{tool} on Gate #{gate} with filament {filament}").format(
+                tool=self.ui_sel_tool,
+                gate=self.ui_sel_gate,
+                filament=loaded
+            )
         else:
             self.ui_sel_gate = self.TOOL_BYPASS
-            summary = (f"Bypass (on bypass gate) with filament {loaded}")
+            summary = _("Bypass (on bypass gate) with filament {filament}").format(filament=loaded)
 
         sel_loaded = self.ui_sel_loaded
         if self.ui_sel_loaded == -1:
             sel_loaded = 0 # Assume unloaded
         self._screen._confirm_send_action(
             None,
-            "This will set the MMU state to:\n\n" + summary + warning + "\n\nSure you want to continue?",
+            _("This will set the MMU state to:\n\n{summary}{warning}\n\nSure you want to continue?").format(
+                summary=summary,
+                warning=warning
+            ),
             "printer.gcode.script",
             {'script': f"MMU_RECOVER TOOL={self.ui_sel_tool} GATE={self.ui_sel_gate} LOADED={self.ui_sel_loaded}"}
         )
@@ -341,8 +350,7 @@ class Panel(ScreenPanel):
     def select_reset(self, widget):
         self._screen._confirm_send_action(
             None,
-            "This will reset persisted MMU state to defaults including TTG map,\n\nEndlessSpool groups, Gate map (material and type) and current selector position\n\nSure you want to continue?",
+            _("This will reset persisted MMU state to defaults including TTG map,\n\nEndlessSpool groups, Gate map (material and type) and current selector position\n\nSure you want to continue?"),
             "printer.gcode.script",
             {'script': "MMU_RESET"}
         )
-

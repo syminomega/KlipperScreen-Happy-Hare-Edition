@@ -10,6 +10,7 @@ gi.require_version("Gtk", "3.0")
 
 from gi.repository import Gtk, Gdk, GLib, Pango
 from ks_includes.screen_panel import ScreenPanel
+from panels.mmu_utils import format_mmu_state
 
 class Panel(ScreenPanel):
     # These are a subset of constants from main Happy Hare for convenience and coding consistency
@@ -77,22 +78,22 @@ class Panel(ScreenPanel):
         }
 
         self.labels = {
-            'check_gates': self._gtk.Button('mmu_checkgates', "Gates", 'color1'),
-            'manage': self._gtk.Button('mmu_manage', "Manage...",'color2'),
+            'check_gates': self._gtk.Button('mmu_checkgates', _("Gates"), 'color1'),
+            'manage': self._gtk.Button('mmu_manage', _("Manage..."), 'color2'),
             't_decrease': self._gtk.Button('decrease', None, scale=self.bts * 1.2),
-            'tool': self._gtk.Button('mmu_extruder', 'Load T0', 'color2'),
+            'tool': self._gtk.Button('mmu_extruder', _("Load T0"), 'color2'),
             't_increase': self._gtk.Button('increase', None, scale=self.bts * 1.2),
-            'picker': self._gtk.Button('mmu_tool_picker', 'Tools...', 'color3'),
-            'unload': self._gtk.Button('mmu_unload', 'Unload', 'color4'), # Doubles as eject button
-            'pause': self._gtk.Button('pause', 'MMU Pause', 'color1'),
-            'message': self._gtk.Button('warning', 'Last Error', 'color1'),
-            'unlock': self._gtk.Button('heat-up', 'Unlock', 'color2'),
-            'resume': self._gtk.Button('resume', 'Resume', 'color3'),
-            'extrude': self._gtk.Button('extrude', 'Extrude...', 'color4'),
-            'more': self._gtk.Button('mmu_more', 'More...', 'color1'),
+            'picker': self._gtk.Button('mmu_tool_picker', _('Tools...'), 'color3'),
+            'unload': self._gtk.Button('mmu_unload', _('Unload'), 'color4'), # Doubles as eject button
+            'pause': self._gtk.Button('pause', _('MMU Pause'), 'color1'),
+            'message': self._gtk.Button('warning', _('Last Error'), 'color1'),
+            'unlock': self._gtk.Button('heat-up', _('Unlock'), 'color2'),
+            'resume': self._gtk.Button('resume', _('Resume'), 'color3'),
+            'extrude': self._gtk.Button('extrude', _('Extrude...'), 'color4'),
+            'more': self._gtk.Button('mmu_more', _('More...'), 'color1'),
             'tool_icon': self._gtk.Image('mmu_extruder', self._gtk.img_width * 0.8, self._gtk.img_height * 0.8),
-            'tool_label': Gtk.Label('Unknown'),
-            'filament': Gtk.Label('Filament: Unknown'),
+            'tool_label': Gtk.Label(_('Unknown')),
+            'filament': Gtk.Label(_('Filament: Unknown')),
             'sensor': Gtk.Label('Ts:'),
             'sensor_state': Gtk.Label('   '),
             'select_bypass_img': self._gtk.Image('mmu_select_bypass'), # Alternative for tool
@@ -118,7 +119,7 @@ class Panel(ScreenPanel):
         self.labels['message'].connect("clicked", self.select_message)
         self.labels['unlock'].connect("clicked", self.select_unlock)
         self.labels['resume'].connect("clicked", self.select_resume)
-        self.labels['extrude'].connect("clicked", self.menu_item_clicked, {"panel": "extrude", "name": "Extrude"})
+        self.labels['extrude'].connect("clicked", self.menu_item_clicked, {"panel": "extrude", "name": _("Extrude")})
         self.labels['more'].connect("clicked", self._screen._go_to_submenu, "mmu")
 
         self.labels['t_increase'].set_hexpand(False)
@@ -150,7 +151,7 @@ class Panel(ScreenPanel):
 
         runout_frame = Gtk.Frame()
         self.labels['runout_frame'] = runout_frame
-        runout_frame.set_label(f"Clog")
+        runout_frame.set_label(_("Clog"))
         runout_frame.set_label_align(0.5, 0)
         runout_frame.add(scale)
 
@@ -288,11 +289,10 @@ class Panel(ScreenPanel):
                     self.update_active_buttons()
             except KeyError as ke:
                 # Almost certainly a mismatch of Happy Hare on the printer
-                msg = "You are probably trying to connect to an incompatible"
-                msg += "\nversion of Happy Hare on your printer. Ensure Happy Hare"
-                msg += "\nis up-to-date, re-run Happy-Hare/install.sh on the"
-                msg += "\nprinter, then make sure you restart Klipper."
-                msg += "\n\nI'll bet this will work out for you :-)"
+                msg = _("You are probably trying to connect to an incompatible")
+                msg += "\n" + _("version of Happy Hare on your printer. Ensure Happy Hare")
+                msg += "\n" + _("is up-to-date, re-run Happy-Hare/install.sh on the")
+                msg += "\n" + _("printer, then make sure you restart Klipper.")
                 self._screen.show_popup_message(msg, 3, save=True)
                 logging.info("Happy Hare: %s" % str(ke))
 
@@ -309,7 +309,7 @@ class Panel(ScreenPanel):
     def select_check_gates(self, widget):
         self._screen._confirm_send_action(
             None,
-            "Check filament availabily in all MMU gates?\n\nAre you sure you want to continue?",
+            _("Check filament availability in all MMU gates?\n\nAre you sure you want to continue?"),
             "printer.gcode.script",
             {'script': "MMU_CHECK_GATE ALL=1 QUIET=1"}
         )
@@ -349,14 +349,14 @@ class Panel(ScreenPanel):
         if tool == self.TOOL_GATE_BYPASS:
             self._screen._ws.klippy.gcode_script(f"MMU_LOAD EXTRUDER_ONLY=1")
         else:
-            self._screen.show_panel('mmu_picker', 'MMU Tool Picker')
+            self._screen.show_panel('mmu_picker', _('MMU Tool Picker'))
 
     def select_pause(self, widget):
         self._screen._ws.klippy.gcode_script(f"MMU_PAUSE FORCE_IN_PRINT=1")
 
     def select_message(self, widget):
         last_toolchange = self._printer.get_stat('mmu', 'last_toolchange')
-        self._screen.show_last_popup_message(f"Last Toolchange: {last_toolchange}")
+        self._screen.show_last_popup_message(_("Last Toolchange: {last_toolchange}").format(last_toolchange=last_toolchange))
 
     def select_resume(self, widget):
         self._screen._ws.klippy.gcode_script(f"RESUME")
@@ -382,10 +382,10 @@ class Panel(ScreenPanel):
         filament = mmu['filament']
         if next_tool != self.TOOL_GATE_UNKNOWN:
             # Change in progress
-            text = ("T%d " % last_tool) if (last_tool >= 0 and last_tool != next_tool) else "Bypass " if last_tool == -2 else "Unknown " if last_tool == -1 else ""
+            text = ("T%d " % last_tool) if (last_tool >= 0 and last_tool != next_tool) else f"{_('Bypass')} " if last_tool == -2 else f"{_('Unknown')} " if last_tool == -1 else ""
             text += ("> T%d" % next_tool) if next_tool >= 0 else ""
         else:
-            text = ("T%d " % tool) if tool >= 0 else "Bypass " if tool == -2 else "Unknown " if tool == -1 else ""
+            text = ("T%d " % tool) if tool >= 0 else f"{_('Bypass')} " if tool == -2 else f"{_('Unknown')} " if tool == -1 else ""
         self.labels['tool_label'].set_text(text)
         if sync_drive:
             self.labels['tool_icon'].set_from_pixbuf(self.labels['sync_drive_pixbuf'])
@@ -393,18 +393,18 @@ class Panel(ScreenPanel):
             self.labels['tool_icon'].set_from_pixbuf(self.labels['tool_icon_pixbuf'])
         if tool == self.TOOL_GATE_BYPASS:
             self.labels['picker'].set_image(self.labels['load_bypass_img'])
-            self.labels['picker'].set_label(f"Load")
+            self.labels['picker'].set_label(_("Load"))
             self.labels['unload'].set_image(self.labels['unload_bypass_img'])
-            self.labels['unload'].set_label(f"Unload")
+            self.labels['unload'].set_label(_("Unload"))
         else:
             self.labels['picker'].set_image(self.labels['tool_picker_img'])
-            self.labels['picker'].set_label(f"Tools...")
+            self.labels['picker'].set_label(_("Tools..."))
             if filament != "Unloaded":
                 self.labels['unload'].set_image(self.labels['unload_img'])
-                self.labels['unload'].set_label("Unload")
+                self.labels['unload'].set_label(_("Unload"))
             else:
                 self.labels['unload'].set_image(self.labels['eject_img'])
-                self.labels['unload'].set_label("Eject")
+                self.labels['unload'].set_label(_("Eject"))
 
     def update_tool_buttons(self, tool_sensitive=True):
         mmu = self._printer.get_stat("mmu")
@@ -438,13 +438,13 @@ class Panel(ScreenPanel):
                 else:
                     self.labels['tool'].set_sensitive(tool_sensitive)
             elif self.ui_sel_tool == self.TOOL_GATE_BYPASS:
-                self.labels['tool'].set_label(f"Bypass")
+                self.labels['tool'].set_label(_("Bypass"))
                 self.labels['tool'].set_sensitive(tool_sensitive)
             else:
-                self.labels['tool'].set_label(f"n/a")
+                self.labels['tool'].set_label(_("n/a"))
                 self.labels['tool'].set_sensitive(tool_sensitive)
         else:
-            self.labels['tool'].set_label(action[:11])
+            self.labels['tool'].set_label(format_mmu_state(action)[:11])
             self.labels['tool'].set_sensitive(False)
 
         if self.ui_sel_tool == self.TOOL_GATE_BYPASS:
@@ -475,7 +475,7 @@ class Panel(ScreenPanel):
     def update_runout_mode(self):
         detection_mode = self._printer.get_stat('mmu_encoder mmu_encoder')['detection_mode']
         enabled = self._printer.get_stat('mmu_encoder mmu_encoder')['enabled']
-        detection_mode_str = "Disabled" if not enabled else "Clog (Auto)" if detection_mode == 2 else "Clog (Man)" if detection_mode == 1 else "Clog Off"
+        detection_mode_str = _("Disabled") if not enabled else _("Clog (Auto)") if detection_mode == 2 else _("Clog (Man)") if detection_mode == 1 else _("Clog Off")
         self.labels['runout_frame'].set_label(f'{detection_mode_str}')
         self.labels['runout_frame'].set_sensitive(detection_mode and enabled)
 
@@ -488,15 +488,15 @@ class Panel(ScreenPanel):
         filament = mmu['filament']
         action = mmu['action']
         if mmu_print_state in ("complete", "error", "cancelled", "started"):
-            pos_str = mmu_print_state.capitalize()
+            pos_str = format_mmu_state(mmu_print_state)
         elif action == "Idle":
-            pos_str = (f"Filament: {encoder_pos}mm") if filament != "Unloaded" else "Filament: Unloaded"
+            pos_str = (_("Filament: {position}mm").format(position=encoder_pos)) if filament != "Unloaded" else _("Filament: Unloaded")
             if flow_rate and self._printer.get_stat("print_stats")['state'] == "printing":
                 pos_str += f"  ➥ {flow_rate}%"
         elif action == "Loading" or action == "Unloading":
-            pos_str = (f"{action}: {encoder_pos}mm")
+            pos_str = _("{action}: {position}mm").format(action=format_mmu_state(action), position=encoder_pos)
         else:
-            pos_str = (f"{action}")
+            pos_str = format_mmu_state(action)
         self.labels['filament'].set_label(f"{pos_str}")
 
     def update_filament_status(self):
@@ -627,10 +627,10 @@ class Panel(ScreenPanel):
         num_gates = len(gate_status)
 
         multi_tool = False
-        msg_gates = "Gates: "
-        msg_tools = "Tools: "
-        msg_avail = "Avail: "
-        msg_selct = "Selct: "
+        msg_gates = _("Gates: ")
+        msg_tools = _("Tools: ")
+        msg_avail = _("Avail: ")
+        msg_selct = _("Selct: ")
         for g in range(num_gates):
             color = self.get_rgb_color(gate_color[g])
             filament_icon = ("█") if not markup or color == "" else (f"<span color='{color}'>█</span>")
@@ -763,4 +763,3 @@ class Panel(ScreenPanel):
         if sensor:
             return sensor['enabled']
         return False
-

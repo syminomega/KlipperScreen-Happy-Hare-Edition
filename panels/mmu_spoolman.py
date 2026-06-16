@@ -50,7 +50,7 @@ class Panel(ScreenPanel):
 
         for i in range(num_gates):
             status_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-            available = self.labels[f'available_{i}'] = Gtk.Label("Unknown")
+            available = self.labels[f'available_{i}'] = Gtk.Label(_("Unknown"))
             available.get_style_context().add_class("mmu_status_text")
             status_box.pack_start(available, True, True, 0)
 
@@ -242,19 +242,19 @@ class Panel(ScreenPanel):
     def get_status_details(self, gate_status):
         if gate_status == self.GATE_AVAILABLE:
             status_icon = 'available_icon'
-            status_str = "Available"
+            status_str = _("Available")
             status_color = self.COLOR_GREEN
         elif gate_status == self.GATE_AVAILABLE_FROM_BUFFER:
             status_icon = 'available_icon'
-            status_str = "Buffered"
+            status_str = _("Buffered")
             status_color = self.COLOR_GREEN
         elif gate_status == self.GATE_EMPTY:
             status_icon = 'empty_icon'
-            status_str = "Empty"
+            status_str = _("Empty")
             status_color = self.COLOR_RED
         else: 
             status_icon = 'unknown_icon'
-            status_str = "Unknown"
+            status_str = _("Unknown")
             status_color = self.COLOR_LIGHT_GREY
         return status_icon, status_str, status_color
 
@@ -295,4 +295,3 @@ class Panel(ScreenPanel):
                 e_data = data['mmu']
                 if 'ttg_map' in e_data or 'gate' in e_data or 'gate_status' in e_data in e_data or 'gate_spool_id' in e_data:
                     self.refresh()
-

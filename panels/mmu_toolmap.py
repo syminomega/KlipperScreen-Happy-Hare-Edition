@@ -10,6 +10,7 @@ gi.require_version("Gtk", "3.0")
 
 from gi.repository import Gtk, GLib, Pango, Gdk
 from ks_includes.screen_panel import ScreenPanel
+from panels.mmu_utils import format_gate
 
 class Panel(ScreenPanel):
 
@@ -50,12 +51,12 @@ class Panel(ScreenPanel):
             'g_decrease': self._gtk.Button('decrease', None, 'color1', scale=self.bts * 1.2),
             'gate': Gtk.Label("#0"),
             'g_increase': self._gtk.Button('increase', None, 'color2', scale=self.bts * 1.2),
-            'save': self._gtk.Button('mmu_save', 'Save', 'color3'),
+            'save': self._gtk.Button('mmu_save', _('Save'), 'color3'),
             'es_decrease': self._gtk.Button('decrease', None, scale=self.bts * 0.6),
-            'es_group': Gtk.Label("ES Group: A"),
+            'es_group': Gtk.Label(_("ES Group: A")),
             'es_increase': self._gtk.Button('increase', None, scale=self.bts * 0.6),
-            'reset': self._gtk.Button('refresh', 'Reset', scale=self.bts, position=Gtk.PositionType.LEFT, lines=1),
-            'endless_spool': Gtk.CheckButton("EndlessSpool - Editing"),
+            'reset': self._gtk.Button('refresh', _('Reset'), scale=self.bts, position=Gtk.PositionType.LEFT, lines=1),
+            'endless_spool': Gtk.CheckButton(_("EndlessSpool - Editing")),
         }
 
         self.labels['t_decrease'].connect("clicked", self.select_toolgate, 'tool', -1)
@@ -244,7 +245,7 @@ class Panel(ScreenPanel):
             self.labels[f'toolmap{y}'].set_text(msg)
         self.labels[f'es_gate{gate}'].get_style_context().add_class("mmu_es_gate_selected")
         self.labels['tool'].set_label(f"T{tool}")
-        self.labels['gate'].set_label(f"Gate #{gate}")
+        self.labels['gate'].set_label(format_gate(gate))
 
     def update_es_group(self):
         gates_in_group = self.build_es_spool_gate_group(self.ui_sel_es_group)
@@ -255,7 +256,7 @@ class Panel(ScreenPanel):
                 self.labels[f"es_gate{g}"].get_style_context().remove_class("mmu_es_gate_selected")
             self.labels[f"es_gate{g}"].set_sensitive(self.ui_es_enabled == 1)
         grp = self.convert_number_to_letter(self.ui_sel_es_group)
-        self.labels['es_group'].set_markup(f"<b>ES Group: {grp}</b>")
+        self.labels['es_group'].set_markup(f"<b>{_('ES Group: {group}').format(group=grp)}</b>")
         self.labels['es_group'].set_sensitive(self.ui_es_enabled == 1)
         self.labels['es_decrease'].set_sensitive(self.ui_es_enabled == 1 and self.ui_sel_es_group > 0)
         self.labels['es_increase'].set_sensitive(self.ui_es_enabled == 1 and self.ui_sel_es_group < len(self.ui_ttg_map) - 1)
@@ -326,9 +327,9 @@ class Panel(ScreenPanel):
         label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR)
 
         if action == "reset":
-            label.set_text("This will reset the TTG map and EndlessSpool groups\n\nto the default defined in your MMU configuration\n\nAre you sure you want to continue?")
+            label.set_text(_("This will reset the TTG map and EndlessSpool groups\n\nto the default defined in your MMU configuration\n\nAre you sure you want to continue?"))
         else:
-            label.set_text("This will set the MMU TTG map and ALL EndlessSpool groups\n\nto the configuration defined on this panel\n\nAre you sure you want to continue?")
+            label.set_text(_("This will set the MMU TTG map and ALL EndlessSpool groups\n\nto the configuration defined on this panel\n\nAre you sure you want to continue?"))
 
         grid = Gtk.Grid(row_homogeneous=True, column_homogeneous=True)
         grid.attach(label, 0, 0, 1, 1)
@@ -350,4 +351,3 @@ class Panel(ScreenPanel):
                 groups=",".join(map(str,self.ui_endless_spool_groups))
                 self._screen._ws.klippy.gcode_script(f"MMU_TTG_MAP MAP={ttg_map} QUIET=1")
                 self._screen._ws.klippy.gcode_script(f"MMU_ENDLESS_SPOOL GROUPS={groups} QUIET=1 ENABLE={self.ui_es_enabled}")
-
