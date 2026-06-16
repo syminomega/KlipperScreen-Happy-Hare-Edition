@@ -60,6 +60,10 @@ WARNING="${B_YELLOW}"
 PROMPT="${CYAN}"
 INPUT="${OFF}"
 
+git_version() {
+    git describe --tags --always --dirty 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo "unknown"
+}
+
 self_update() {
     [ "$UPDATE_GUARD" ] && return
     export UPDATE_GUARD=YES
@@ -107,14 +111,14 @@ self_update() {
     if [ -n "${RESTART}" ]; then
         git checkout $BRANCH --quiet
         git pull --quiet --force
-        GIT_VER=$(git describe --tags)
+        GIT_VER=$(git_version)
         echo -e "${B_GREEN}Now on git version ${GIT_VER}"
         echo -e "${B_GREEN}Running the new install script..."
         cd - >/dev/null
         exec "$SCRIPTNAME" "${ARGS[@]}"
         exit 0 # Exit this old instance
     fi
-    GIT_VER=$(git describe --tags)
+    GIT_VER=$(git_version)
     echo -e "${B_GREEN}Already the latest version: ${GIT_VER}"
 }
 
@@ -327,4 +331,3 @@ echo '(\_/)'
 echo '( *,*)'
 echo '(")_(") Happy Hare Ready'
 echo
-
