@@ -21,7 +21,7 @@ class ToolheadDrawing(Gtk.DrawingArea):
         self.tool_label = "T?"
         self.filament_color = (0.45, 0.45, 0.45, 1.0)
         self.loaded = False
-        self.set_size_request(160, 300)
+        self.set_size_request(150, 300)
         self.connect("draw", self.draw)
 
     def set_tool(self, label, color, loaded):
@@ -80,23 +80,17 @@ class ToolheadDrawing(Gtk.DrawingArea):
         dim_line = (fg.red, fg.green, fg.blue, 0.38)
         fill = (fg.red, fg.green, fg.blue, 0.04)
 
-        active_offset = height * 0.16 * self.progress
-        outer_x = width * 0.08
-        outer_y = height * 0.04
-        outer_w = width * 0.84
-        outer_h = height * 0.91
+        active_offset = height * 0.10 * self.progress
 
-        cr.set_line_width(line_width)
-        cr.set_source_rgba(*fill)
-        self._rounded_rectangle(cr, outer_x, outer_y, outer_w, outer_h, 18 * scale)
-        cr.fill_preserve()
-        cr.set_source_rgba(*(line if self.active else dim_line))
-        cr.stroke()
+        if self.active:
+            self._rounded_rectangle(cr, width * 0.07, height * 0.05, width * 0.86, height * 0.90, 16 * scale)
+            cr.set_source_rgba(0.24, 0.58, 0.94, 0.22)
+            cr.fill()
 
         body_w = width * 0.56
-        body_h = height * 0.50
+        body_h = height * 0.54
         body_x = (width - body_w) / 2
-        body_y = height * 0.14 + active_offset
+        body_y = height * 0.09 + active_offset
         nozzle_h = height * 0.10
 
         cr.set_source_rgba(1, 1, 1, 0.03)
@@ -115,28 +109,31 @@ class ToolheadDrawing(Gtk.DrawingArea):
         cr.set_source_rgba(*(line if self.active else dim_line))
         cr.stroke()
 
-        filament = self.filament_color if self.loaded else (fg.red, fg.green, fg.blue, 0.18)
-        stripe_w = max(10 * scale, width * 0.11)
-        stripe_x = (width - stripe_w) / 2
-        cr.rectangle(stripe_x, outer_y, stripe_w, max(0, body_y - outer_y + height * 0.05))
-        cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
-        cr.set_source_rgba(*filament)
-        cr.fill()
-        cr.set_line_width(max(1.0, line_width * 0.65))
-        cr.rectangle(stripe_x, outer_y, stripe_w, max(0, body_y - outer_y + height * 0.05))
-        cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
-        cr.set_source_rgba(filament[0], filament[1], filament[2], 0.85 if self.loaded else 0.28)
-        cr.stroke()
+        if self.loaded:
+            filament = self.filament_color
+            stripe_w = max(10 * scale, width * 0.11)
+            stripe_x = (width - stripe_w) / 2
+            stripe_top = height * 0.03
+            cr.rectangle(stripe_x, stripe_top, stripe_w, max(0, body_y - stripe_top + height * 0.05))
+            cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
+            cr.set_source_rgba(*filament)
+            cr.fill()
+            cr.set_line_width(max(1.0, line_width * 0.65))
+            cr.rectangle(stripe_x, stripe_top, stripe_w, max(0, body_y - stripe_top + height * 0.05))
+            cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
+            cr.set_source_rgba(filament[0], filament[1], filament[2], 0.85)
+            cr.stroke()
 
-        text_color = line if self.loaded or self.active else dim_line
-        self._draw_centered_text(
-            cr,
-            self.tool_label,
-            width / 2,
-            body_y + body_h * 0.43,
-            max(20, min(width, height) * 0.16),
-            text_color,
-        )
+        if self.tool_label:
+            text_color = line if self.loaded or self.active else dim_line
+            self._draw_centered_text(
+                cr,
+                self.tool_label,
+                width / 2,
+                body_y + body_h * 0.35,
+                max(20, min(width, height) * 0.16),
+                text_color,
+            )
         return False
 
 
@@ -175,12 +172,25 @@ class Panel(ScreenPanel):
         padding: 0.35em;
     }
     .switch_burner_tool_button {
-        border-radius: 8px;
-        padding: 0.25em;
+        background: transparent;
+        background-image: none;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
     }
-    .switch_burner_tool_button_active {
-        border-color: @theme_selected_bg_color;
-        box-shadow: inset 0 0 0 0.14em @theme_selected_bg_color;
+    .switch_burner_tool_button:hover,
+    .switch_burner_tool_button:active,
+    .switch_burner_tool_button:checked {
+        background: transparent;
+        background-image: none;
+        border: 0;
+        box-shadow: none;
+    }
+    .switch_burner_tool_group {
+        border: 0.12em solid rgba(255, 255, 255, 0.42);
+        border-radius: 8px;
+        padding: 0.35em;
+        background: rgba(255, 255, 255, 0.025);
     }
     .switch_burner_meta {
         opacity: 0.82;
@@ -219,6 +229,7 @@ class Panel(ScreenPanel):
         root.get_style_context().add_class("switch_burner_root")
 
         toolheads = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8, homogeneous=True, hexpand=True, vexpand=True)
+        toolheads.get_style_context().add_class("switch_burner_tool_group")
         self.left_drawing = ToolheadDrawing("left")
         self.right_drawing = ToolheadDrawing("right")
         self.labels["left_toolhead"] = self._toolhead_button(self.left_drawing, "left")
@@ -237,6 +248,7 @@ class Panel(ScreenPanel):
 
     def _toolhead_button(self, drawing, side):
         button = Gtk.Button(hexpand=True, vexpand=True, can_focus=False)
+        button.set_relief(Gtk.ReliefStyle.NONE)
         button.get_style_context().add_class("switch_burner_tool_button")
         button.add(drawing)
         button.connect("clicked", self._select_side, side)
@@ -339,7 +351,7 @@ class Panel(ScreenPanel):
         else:
             self.selected_tool = 0
 
-        self.left_drawing.set_tool(_("Empty"), self.COLOR_GREY, False)
+        self.left_drawing.set_tool("", self.COLOR_GREY, False)
 
         right_tool = current_tool if current_tool is not None and current_tool >= 0 else self.selected_tool
         right_color = self._tool_color(mmu, right_tool)
@@ -365,12 +377,7 @@ class Panel(ScreenPanel):
         self.right_drawing.set_active(right_active)
         for key, active in (("left_toolhead", left_active), ("right_toolhead", right_active)):
             ctx = self.labels[key].get_style_context()
-            if active:
-                ctx.add_class("button_active")
-                ctx.add_class("switch_burner_tool_button_active")
-            else:
-                ctx.remove_class("button_active")
-                ctx.remove_class("switch_burner_tool_button_active")
+            ctx.remove_class("button_active")
 
     @staticmethod
     def _int_or_none(value):
