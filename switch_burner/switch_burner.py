@@ -21,15 +21,19 @@ class ToolheadDrawing(Gtk.DrawingArea):
         self.tool_label = "T?"
         self.temp_label = ""
         self.filament_color = (0.45, 0.45, 0.45, 1.0)
+        self.top_loaded = False
+        self.lower_loaded = False
         self.loaded = False
         self.set_size_request(130, 260)
         self.connect("draw", self.draw)
 
-    def set_tool(self, label, color, loaded, temp_label=""):
+    def set_tool(self, label, color, loaded, temp_label="", lower_loaded=None):
         self.tool_label = label
         self.temp_label = temp_label
         self.filament_color = color
-        self.loaded = loaded
+        self.top_loaded = loaded
+        self.lower_loaded = loaded if lower_loaded is None else lower_loaded
+        self.loaded = self.top_loaded or self.lower_loaded
         self.queue_draw()
 
     def set_active(self, active):
@@ -87,7 +91,7 @@ class ToolheadDrawing(Gtk.DrawingArea):
         center_x = width * (0.57 if self.side == "left" else 0.43)
 
         if self.active:
-            highlight_w = width * 0.74
+            highlight_w = width * 0.86
             self._rounded_rectangle(
                 cr,
                 center_x - highlight_w / 2,
@@ -103,7 +107,7 @@ class ToolheadDrawing(Gtk.DrawingArea):
         body_h = height * 0.54
         body_x = center_x - body_w / 2
         body_y = height * 0.09 + active_offset
-        nozzle_h = height * 0.12
+        nozzle_h = height * 0.14
 
         cr.set_source_rgba(1, 1, 1, 0.03)
         self._rounded_rectangle(cr, body_x, body_y, body_w, body_h, 14 * scale)
@@ -119,10 +123,10 @@ class ToolheadDrawing(Gtk.DrawingArea):
             cr.line_to(body_x + body_w * 0.82, body_y + body_h * ratio)
             cr.stroke()
 
-        block_w = body_w * 0.68
-        block_h = body_h * 0.25
+        block_w = body_w * 0.72
+        block_h = body_h * 0.26
         block_x = center_x - block_w / 2
-        block_y = body_y + body_h * 0.51 - block_h / 2
+        block_y = body_y + body_h * 0.58 - block_h / 2
         self._rounded_rectangle(cr, block_x, block_y, block_w, block_h, 5 * scale)
         cr.set_source_rgba(1, 1, 1, 0.045)
         cr.fill_preserve()
@@ -139,9 +143,9 @@ class ToolheadDrawing(Gtk.DrawingArea):
             )
 
         nozzle_top = body_y + body_h
-        neck_w = body_w * 0.38
+        neck_w = body_w * 0.72
         tip_w = body_w * 0.16
-        neck_y = nozzle_top + max(2.0, line_width * 1.35)
+        neck_y = nozzle_top
         cr.move_to(center_x - neck_w / 2, neck_y)
         cr.line_to(center_x + neck_w / 2, neck_y)
         cr.line_to(center_x + tip_w / 2, neck_y + nozzle_h)
@@ -152,26 +156,15 @@ class ToolheadDrawing(Gtk.DrawingArea):
         cr.set_source_rgba(*(line if self.active else dim_line))
         cr.stroke()
 
-        orifice_w = body_w * 0.10
-        orifice_h = height * 0.014
-        cr.rectangle(center_x - orifice_w / 2, neck_y + nozzle_h, orifice_w, orifice_h)
-        cr.set_source_rgba(detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.55)
-        cr.fill()
-
-        filament = self.filament_color if self.loaded else (fg.red, fg.green, fg.blue, 0.16)
-        stroke_alpha = 0.85 if self.loaded else 0.22
+        empty_filament = (fg.red, fg.green, fg.blue, 0.16)
         stripe_w = max(10 * scale, width * 0.11)
         stripe_x = center_x - stripe_w / 2
         stripe_top = height * 0.03
-        cr.rectangle(stripe_x, stripe_top, stripe_w, max(0, body_y - stripe_top + height * 0.05))
-        cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
-        cr.set_source_rgba(*filament)
-        cr.fill()
-        cr.set_line_width(max(1.0, line_width * 0.65))
-        cr.rectangle(stripe_x, stripe_top, stripe_w, max(0, body_y - stripe_top + height * 0.05))
-        cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
-        cr.set_source_rgba(filament[0], filament[1], filament[2], stroke_alpha)
-        cr.stroke()
+        top_end = body_y + body_h * 0.22
+        lower_start = body_y + body_h * 0.78
+        lower_end = body_y + body_h
+        self._draw_filament_segment(cr, stripe_x, stripe_top, stripe_w, max(0, top_end - stripe_top), self.top_loaded, empty_filament, line_width)
+        self._draw_filament_segment(cr, stripe_x, lower_start, stripe_w, max(0, lower_end - lower_start), self.lower_loaded, empty_filament, line_width)
 
         if self.tool_label:
             text_color = line if self.loaded or self.active else dim_line
@@ -184,6 +177,19 @@ class ToolheadDrawing(Gtk.DrawingArea):
                 text_color,
             )
         return False
+
+    def _draw_filament_segment(self, cr, x, y, width, height, loaded, empty_color, line_width):
+        if height <= 0:
+            return
+        color = self.filament_color if loaded else empty_color
+        stroke_alpha = 0.85 if loaded else 0.22
+        cr.rectangle(x, y, width, height)
+        cr.set_source_rgba(*color)
+        cr.fill()
+        cr.set_line_width(max(1.0, line_width * 0.65))
+        cr.rectangle(x, y, width, height)
+        cr.set_source_rgba(color[0], color[1], color[2], stroke_alpha)
+        cr.stroke()
 
 
 class ColorSwatch(Gtk.DrawingArea):
@@ -402,7 +408,12 @@ class Panel(ScreenPanel):
     def process_update(self, action, data):
         if action != "notify_status_update":
             return
-        if "mmu" in data or any(name.startswith("extruder") for name in data):
+        if (
+            "mmu" in data
+            or any(name.startswith("extruder") for name in data)
+            or any(name.startswith("filament_switch_sensor ") for name in data)
+            or any(name.startswith("filament_motion_sensor ") for name in data)
+        ):
             self._refresh_from_mmu()
 
     def _select_side(self, widget, side):
@@ -451,7 +462,13 @@ class Panel(ScreenPanel):
         right_tool = current_tool if current_tool is not None and current_tool >= 0 else self.selected_tool
         right_color = self._tool_color(mmu, right_tool)
         right_label = f"T{right_tool}" if self.tool_count > 0 else "T?"
-        self.right_drawing.set_tool(right_label, right_color, loaded, self._right_hotend_temp())
+        self.right_drawing.set_tool(
+            right_label,
+            right_color,
+            loaded or self._filament_started(mmu),
+            self._right_hotend_temp(),
+            self._filament_in_toolhead(mmu),
+        )
 
         selected_color = self._tool_color(mmu, self.selected_tool)
         self.labels["selected_swatch"].set_color(selected_color)
@@ -497,6 +514,31 @@ class Panel(ScreenPanel):
         if isinstance(temp, (int, float)):
             return f"{temp:.0f}C"
         return ""
+
+    def _filament_started(self, mmu):
+        filament = mmu.get("filament")
+        direction = self._int_or_none(mmu.get("filament_direction"))
+        pos = self._int_or_none(mmu.get("filament_pos"))
+        return filament == "Loaded" or direction == 1 or (pos is not None and pos > 0)
+
+    def _filament_in_toolhead(self, mmu):
+        filament = mmu.get("filament")
+        pos = self._int_or_none(mmu.get("filament_pos"))
+        return filament == "Loaded" or (pos is not None and pos >= 8) or self._toolhead_sensor_detected()
+
+    def _toolhead_sensor_detected(self):
+        sensor_names = (
+            "filament_switch_sensor toolhead_sensor",
+            "filament_switch_sensor extruder_sensor",
+            "filament_switch_sensor mmu_toolhead_sensor",
+            "filament_motion_sensor toolhead_sensor",
+            "filament_motion_sensor extruder_sensor",
+        )
+        for sensor in sensor_names:
+            data = self._printer.get_stat(sensor)
+            if isinstance(data, dict) and data.get("filament_detected") is True:
+                return True
+        return False
 
     def _gate_for_tool(self, mmu, tool):
         ttg_map = mmu.get("ttg_map")
