@@ -21,7 +21,7 @@ class ToolheadDrawing(Gtk.DrawingArea):
         self.tool_label = "T?"
         self.filament_color = (0.45, 0.45, 0.45, 1.0)
         self.loaded = False
-        self.set_size_request(150, 300)
+        self.set_size_request(130, 260)
         self.connect("draw", self.draw)
 
     def set_tool(self, label, color, loaded):
@@ -83,11 +83,11 @@ class ToolheadDrawing(Gtk.DrawingArea):
         active_offset = height * 0.10 * self.progress
 
         if self.active:
-            self._rounded_rectangle(cr, width * 0.07, height * 0.05, width * 0.86, height * 0.90, 16 * scale)
-            cr.set_source_rgba(0.24, 0.58, 0.94, 0.22)
+            self._rounded_rectangle(cr, width * 0.08, height * 0.04, width * 0.84, height * 0.92, 14 * scale)
+            cr.set_source_rgba(0.24, 0.58, 0.94, 0.20)
             cr.fill()
 
-        body_w = width * 0.56
+        body_w = width * 0.58
         body_h = height * 0.54
         body_x = (width - body_w) / 2
         body_y = height * 0.09 + active_offset
@@ -109,20 +109,20 @@ class ToolheadDrawing(Gtk.DrawingArea):
         cr.set_source_rgba(*(line if self.active else dim_line))
         cr.stroke()
 
-        if self.loaded:
-            filament = self.filament_color
-            stripe_w = max(10 * scale, width * 0.11)
-            stripe_x = (width - stripe_w) / 2
-            stripe_top = height * 0.03
-            cr.rectangle(stripe_x, stripe_top, stripe_w, max(0, body_y - stripe_top + height * 0.05))
-            cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
-            cr.set_source_rgba(*filament)
-            cr.fill()
-            cr.set_line_width(max(1.0, line_width * 0.65))
-            cr.rectangle(stripe_x, stripe_top, stripe_w, max(0, body_y - stripe_top + height * 0.05))
-            cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
-            cr.set_source_rgba(filament[0], filament[1], filament[2], 0.85)
-            cr.stroke()
+        filament = self.filament_color if self.loaded else (fg.red, fg.green, fg.blue, 0.16)
+        stroke_alpha = 0.85 if self.loaded else 0.22
+        stripe_w = max(10 * scale, width * 0.11)
+        stripe_x = (width - stripe_w) / 2
+        stripe_top = height * 0.03
+        cr.rectangle(stripe_x, stripe_top, stripe_w, max(0, body_y - stripe_top + height * 0.05))
+        cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
+        cr.set_source_rgba(*filament)
+        cr.fill()
+        cr.set_line_width(max(1.0, line_width * 0.65))
+        cr.rectangle(stripe_x, stripe_top, stripe_w, max(0, body_y - stripe_top + height * 0.05))
+        cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
+        cr.set_source_rgba(filament[0], filament[1], filament[2], stroke_alpha)
+        cr.stroke()
 
         if self.tool_label:
             text_color = line if self.loaded or self.active else dim_line
@@ -189,8 +189,26 @@ class Panel(ScreenPanel):
     .switch_burner_tool_group {
         border: 0.12em solid rgba(255, 255, 255, 0.42);
         border-radius: 8px;
-        padding: 0.35em;
+        padding: 0.35em 0.55em 0.55em 0.55em;
         background: rgba(255, 255, 255, 0.025);
+    }
+    .switch_burner_tool_title {
+        font-size: 0.78em;
+        font-weight: bold;
+        opacity: 0.72;
+        letter-spacing: 0;
+    }
+    .switch_burner_title_rule {
+        min-height: 0.12em;
+        background: rgba(255, 255, 255, 0.25);
+    }
+    .switch_burner_accent_left {
+        min-height: 0.16em;
+        background: rgba(244, 122, 122, 0.50);
+    }
+    .switch_burner_accent_right {
+        min-height: 0.16em;
+        background: rgba(112, 190, 112, 0.50);
     }
     .switch_burner_meta {
         opacity: 0.82;
@@ -228,8 +246,32 @@ class Panel(ScreenPanel):
         root = Gtk.Box(orientation=root_orientation, spacing=10, hexpand=True, vexpand=True)
         root.get_style_context().add_class("switch_burner_root")
 
-        toolheads = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8, homogeneous=True, hexpand=True, vexpand=True)
-        toolheads.get_style_context().add_class("switch_burner_tool_group")
+        tool_module = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5, hexpand=False, vexpand=False)
+        tool_module.set_halign(Gtk.Align.CENTER)
+        tool_module.set_valign(Gtk.Align.CENTER)
+        tool_module.set_size_request(360, 320)
+        tool_module.get_style_context().add_class("switch_burner_tool_group")
+
+        title_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6, hexpand=True, vexpand=False)
+        title_left = Gtk.Box(hexpand=True, vexpand=False)
+        title_right = Gtk.Box(hexpand=True, vexpand=False)
+        title_left.get_style_context().add_class("switch_burner_title_rule")
+        title_right.get_style_context().add_class("switch_burner_title_rule")
+        title = Gtk.Label(label="SwitchBurner", hexpand=False, vexpand=False)
+        title.get_style_context().add_class("switch_burner_tool_title")
+        title_row.pack_start(title_left, True, True, 0)
+        title_row.pack_start(title, False, False, 0)
+        title_row.pack_start(title_right, True, True, 0)
+
+        accent_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8, hexpand=True, vexpand=False)
+        accent_left = Gtk.Box(hexpand=True, vexpand=False)
+        accent_right = Gtk.Box(hexpand=True, vexpand=False)
+        accent_left.get_style_context().add_class("switch_burner_accent_left")
+        accent_right.get_style_context().add_class("switch_burner_accent_right")
+        accent_row.pack_start(accent_left, True, True, 0)
+        accent_row.pack_start(accent_right, True, True, 0)
+
+        toolheads = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0, homogeneous=True, hexpand=True, vexpand=True)
         self.left_drawing = ToolheadDrawing("left")
         self.right_drawing = ToolheadDrawing("right")
         self.labels["left_toolhead"] = self._toolhead_button(self.left_drawing, "left")
@@ -237,12 +279,16 @@ class Panel(ScreenPanel):
         toolheads.add(self.labels["left_toolhead"])
         toolheads.add(self.labels["right_toolhead"])
 
+        tool_module.pack_start(title_row, False, False, 0)
+        tool_module.pack_start(accent_row, False, False, 0)
+        tool_module.pack_start(toolheads, True, True, 0)
+
         controls = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, hexpand=True, vexpand=True)
         controls.set_size_request(260, -1)
         controls.pack_start(self._build_tool_selector(), False, False, 0)
         controls.pack_start(self._build_action_grid(), True, True, 0)
 
-        root.pack_start(toolheads, True, True, 0)
+        root.pack_start(tool_module, False, False, 0)
         root.pack_start(controls, True, True, 0)
         self.content.add(root)
 
