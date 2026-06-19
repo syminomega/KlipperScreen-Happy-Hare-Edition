@@ -19,13 +19,15 @@ class ToolheadDrawing(Gtk.DrawingArea):
         self.target = 0.0
         self.animation_id = None
         self.tool_label = "T?"
+        self.temp_label = ""
         self.filament_color = (0.45, 0.45, 0.45, 1.0)
         self.loaded = False
         self.set_size_request(130, 260)
         self.connect("draw", self.draw)
 
-    def set_tool(self, label, color, loaded):
+    def set_tool(self, label, color, loaded, temp_label=""):
         self.tool_label = label
+        self.temp_label = temp_label
         self.filament_color = color
         self.loaded = loaded
         self.queue_draw()
@@ -82,12 +84,21 @@ class ToolheadDrawing(Gtk.DrawingArea):
 
         active_offset = height * 0.10 * self.progress
 
+        center_x = width * (0.57 if self.side == "left" else 0.43)
+
         if self.active:
-            self._rounded_rectangle(cr, width * 0.08, height * 0.04, width * 0.84, height * 0.92, 14 * scale)
+            highlight_w = width * 0.74
+            self._rounded_rectangle(
+                cr,
+                center_x - highlight_w / 2,
+                height * 0.04,
+                highlight_w,
+                height * 0.92,
+                14 * scale,
+            )
             cr.set_source_rgba(0.24, 0.58, 0.94, 0.20)
             cr.fill()
 
-        center_x = width * (0.57 if self.side == "left" else 0.43)
         body_w = width * 0.62
         body_h = height * 0.54
         body_x = center_x - body_w / 2
@@ -108,42 +119,42 @@ class ToolheadDrawing(Gtk.DrawingArea):
             cr.line_to(body_x + body_w * 0.82, body_y + body_h * ratio)
             cr.stroke()
 
-        block_w = body_w * 0.54
-        block_h = body_h * 0.18
-        for ratio in (0.50,):
-            self._rounded_rectangle(
+        block_w = body_w * 0.68
+        block_h = body_h * 0.25
+        block_x = center_x - block_w / 2
+        block_y = body_y + body_h * 0.51 - block_h / 2
+        self._rounded_rectangle(cr, block_x, block_y, block_w, block_h, 5 * scale)
+        cr.set_source_rgba(1, 1, 1, 0.045)
+        cr.fill_preserve()
+        cr.set_source_rgba(detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.72)
+        cr.stroke()
+        if self.temp_label:
+            self._draw_centered_text(
                 cr,
-                center_x - block_w / 2,
-                body_y + body_h * ratio - block_h / 2,
-                block_w,
-                block_h,
-                5 * scale,
+                self.temp_label,
+                center_x,
+                block_y + block_h * 0.52,
+                max(10, min(width, height) * 0.075),
+                (detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.85),
             )
-            cr.set_source_rgba(1, 1, 1, 0.035)
-            cr.fill_preserve()
-            cr.set_source_rgba(detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.72)
-            cr.stroke()
-
-        screw_r = max(2.0, 3.0 * scale)
-        for sx in (body_x + body_w * 0.24, body_x + body_w * 0.76):
-            for sy in (body_y + body_h * 0.12, body_y + body_h * 0.88):
-                cr.arc(sx, sy, screw_r, 0, 6.2832)
-                cr.set_source_rgba(detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.55)
-                cr.stroke()
 
         nozzle_top = body_y + body_h
-        cr.move_to(body_x + body_w * 0.18, nozzle_top)
-        cr.line_to(body_x + body_w * 0.82, nozzle_top)
-        cr.line_to(center_x, nozzle_top + nozzle_h)
+        neck_w = body_w * 0.38
+        tip_w = body_w * 0.16
+        neck_y = nozzle_top + max(2.0, line_width * 1.35)
+        cr.move_to(center_x - neck_w / 2, neck_y)
+        cr.line_to(center_x + neck_w / 2, neck_y)
+        cr.line_to(center_x + tip_w / 2, neck_y + nozzle_h)
+        cr.line_to(center_x - tip_w / 2, neck_y + nozzle_h)
         cr.close_path()
         cr.set_source_rgba(1, 1, 1, 0.02)
         cr.fill_preserve()
         cr.set_source_rgba(*(line if self.active else dim_line))
         cr.stroke()
 
-        tip_w = body_w * 0.14
-        tip_h = height * 0.025
-        cr.rectangle(center_x - tip_w / 2, nozzle_top + nozzle_h - tip_h * 0.35, tip_w, tip_h)
+        orifice_w = body_w * 0.10
+        orifice_h = height * 0.014
+        cr.rectangle(center_x - orifice_w / 2, neck_y + nozzle_h, orifice_w, orifice_h)
         cr.set_source_rgba(detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.55)
         cr.fill()
 
@@ -391,7 +402,7 @@ class Panel(ScreenPanel):
     def process_update(self, action, data):
         if action != "notify_status_update":
             return
-        if "mmu" in data:
+        if "mmu" in data or any(name.startswith("extruder") for name in data):
             self._refresh_from_mmu()
 
     def _select_side(self, widget, side):
@@ -440,7 +451,7 @@ class Panel(ScreenPanel):
         right_tool = current_tool if current_tool is not None and current_tool >= 0 else self.selected_tool
         right_color = self._tool_color(mmu, right_tool)
         right_label = f"T{right_tool}" if self.tool_count > 0 else "T?"
-        self.right_drawing.set_tool(right_label, right_color, loaded)
+        self.right_drawing.set_tool(right_label, right_color, loaded, self._right_hotend_temp())
 
         selected_color = self._tool_color(mmu, self.selected_tool)
         self.labels["selected_swatch"].set_color(selected_color)
@@ -476,6 +487,16 @@ class Panel(ScreenPanel):
             if isinstance(value, list) and len(value) > 0:
                 return len(value)
         return 0
+
+    def _right_hotend_temp(self):
+        extruder = self._printer.get_stat("toolhead", "extruder")
+        if not extruder:
+            tools = self._printer.get_tools()
+            extruder = tools[0] if tools else "extruder"
+        temp = self._printer.get_stat(extruder, "temperature")
+        if isinstance(temp, (int, float)):
+            return f"{temp:.0f}C"
+        return ""
 
     def _gate_for_tool(self, mmu, tool):
         ttg_map = mmu.get("ttg_map")
