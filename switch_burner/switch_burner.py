@@ -87,11 +87,12 @@ class ToolheadDrawing(Gtk.DrawingArea):
             cr.set_source_rgba(0.24, 0.58, 0.94, 0.20)
             cr.fill()
 
-        body_w = width * 0.58
+        center_x = width * (0.57 if self.side == "left" else 0.43)
+        body_w = width * 0.62
         body_h = height * 0.54
-        body_x = (width - body_w) / 2
+        body_x = center_x - body_w / 2
         body_y = height * 0.09 + active_offset
-        nozzle_h = height * 0.10
+        nozzle_h = height * 0.12
 
         cr.set_source_rgba(1, 1, 1, 0.03)
         self._rounded_rectangle(cr, body_x, body_y, body_w, body_h, 14 * scale)
@@ -99,20 +100,57 @@ class ToolheadDrawing(Gtk.DrawingArea):
         cr.set_source_rgba(*(line if self.active else dim_line))
         cr.stroke()
 
+        detail_color = line if self.active else dim_line
+        cr.set_line_width(max(1.0, line_width * 0.55))
+        cr.set_source_rgba(detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.62)
+        for ratio in (0.22, 0.78):
+            cr.move_to(body_x + body_w * 0.18, body_y + body_h * ratio)
+            cr.line_to(body_x + body_w * 0.82, body_y + body_h * ratio)
+            cr.stroke()
+
+        block_w = body_w * 0.54
+        block_h = body_h * 0.18
+        for ratio in (0.50,):
+            self._rounded_rectangle(
+                cr,
+                center_x - block_w / 2,
+                body_y + body_h * ratio - block_h / 2,
+                block_w,
+                block_h,
+                5 * scale,
+            )
+            cr.set_source_rgba(1, 1, 1, 0.035)
+            cr.fill_preserve()
+            cr.set_source_rgba(detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.72)
+            cr.stroke()
+
+        screw_r = max(2.0, 3.0 * scale)
+        for sx in (body_x + body_w * 0.24, body_x + body_w * 0.76):
+            for sy in (body_y + body_h * 0.12, body_y + body_h * 0.88):
+                cr.arc(sx, sy, screw_r, 0, 6.2832)
+                cr.set_source_rgba(detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.55)
+                cr.stroke()
+
         nozzle_top = body_y + body_h
         cr.move_to(body_x + body_w * 0.18, nozzle_top)
         cr.line_to(body_x + body_w * 0.82, nozzle_top)
-        cr.line_to(width / 2, nozzle_top + nozzle_h)
+        cr.line_to(center_x, nozzle_top + nozzle_h)
         cr.close_path()
         cr.set_source_rgba(1, 1, 1, 0.02)
         cr.fill_preserve()
         cr.set_source_rgba(*(line if self.active else dim_line))
         cr.stroke()
 
+        tip_w = body_w * 0.14
+        tip_h = height * 0.025
+        cr.rectangle(center_x - tip_w / 2, nozzle_top + nozzle_h - tip_h * 0.35, tip_w, tip_h)
+        cr.set_source_rgba(detail_color[0], detail_color[1], detail_color[2], detail_color[3] * 0.55)
+        cr.fill()
+
         filament = self.filament_color if self.loaded else (fg.red, fg.green, fg.blue, 0.16)
         stroke_alpha = 0.85 if self.loaded else 0.22
         stripe_w = max(10 * scale, width * 0.11)
-        stripe_x = (width - stripe_w) / 2
+        stripe_x = center_x - stripe_w / 2
         stripe_top = height * 0.03
         cr.rectangle(stripe_x, stripe_top, stripe_w, max(0, body_y - stripe_top + height * 0.05))
         cr.rectangle(stripe_x, body_y + body_h * 0.62, stripe_w, body_h * 0.32)
@@ -129,8 +167,8 @@ class ToolheadDrawing(Gtk.DrawingArea):
             self._draw_centered_text(
                 cr,
                 self.tool_label,
-                width / 2,
-                body_y + body_h * 0.35,
+                center_x,
+                body_y + body_h * 0.34,
                 max(20, min(width, height) * 0.16),
                 text_color,
             )
@@ -249,7 +287,7 @@ class Panel(ScreenPanel):
         tool_module = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5, hexpand=False, vexpand=False)
         tool_module.set_halign(Gtk.Align.CENTER)
         tool_module.set_valign(Gtk.Align.CENTER)
-        tool_module.set_size_request(360, 320)
+        tool_module.set_size_request(330, 320)
         tool_module.get_style_context().add_class("switch_burner_tool_group")
 
         title_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6, hexpand=True, vexpand=False)
